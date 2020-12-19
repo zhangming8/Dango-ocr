@@ -97,7 +97,7 @@ class WScreenShot(QWidget):
         data["range"]["Y2"] = Y2
 
         with open(folder_path+'/config/settin.json', 'w') as file:
-            json.dump(data, file)
+            json.dump(data, file, indent=2)
 
         self.chooseRange.setGeometry(X1, Y1, X2 - X1, Y2 - Y1)
         self.chooseRange.Label.setGeometry(0, 0, X2 - X1, Y2 - Y1)

@@ -1,5 +1,9 @@
 # Byte-compiled / optimized / DLL files
+.idea/
 API2.py
+config/image.jpg
+config/voice.mp3
+config/*.txt
 
 __pycache__/
 *.py[cod]

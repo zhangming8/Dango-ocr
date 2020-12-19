@@ -4,6 +4,7 @@ from playsound import playsound
 from traceback import print_exc
 import json
 from js2py import EvalJs
+import os
 
 from ScreenRate import folder_path
 
@@ -46,9 +47,7 @@ class Voice():
                 "BingLanguage"] + "&total=1&idx=0&textlen=107&tk=" + tk + "&client=webapp&prev=input"
             res = self.session.get(url, headers=self.headers)
 
-            import os
             if os.path.isfile(folder_path + '/config/voice.mp3'):
-                print("folder_path + '/config/voice.mp3'", folder_path + '/config/voice.mp3')
                 os.remove(folder_path + '/config/voice.mp3')
             with open(folder_path + '/config/voice.mp3', 'wb') as file:
                 file.write(res.content)

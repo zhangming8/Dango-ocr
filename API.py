@@ -19,7 +19,7 @@ def error_stop():
     if data["sign"] % 2 == 0:
         data["sign"] = 1
         with open(folder_path+'/config/settin.json', 'w') as file:
-            json.dump(data, file)
+            json.dump(data, file, indent=2)
 
 
 # 错误提示窗口
@@ -42,11 +42,11 @@ def MessageBox(title, text):
 
 def orc(data):
     language = data["language"]  # 翻译语种
-    # 换成自己的ocr服务
-    request_url = ''
+    port = "8811"
+    request_url = "" # 设置自己的服务器
     f = open(folder_path + '/config/image.jpg', 'rb')
     img = b64encode(f.read())
-    data = {"image": img, "language_type": language, "user_id": "234232", "platform": "win32"}
+    data = {} # 设置自己的服务器
     try:
         response = requests.post(request_url, data=data, timeout=20)
 
@@ -58,8 +58,8 @@ def orc(data):
 
     if response:
         result = response.json()['data']['result'][0]  # batch result, now we only use first one
-        print(language)
-        print(result)
+        # print(language)
+        # print(result)
 
         sentence = ""
         for one_ann in result:

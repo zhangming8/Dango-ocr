@@ -83,7 +83,7 @@ def translate(window, data, use_translate_signal):
 
             # 保存原文
             content = "\n\n[原文]\n%s" % original
-            with open(folder_path + "/config/翻译历史.txt", "a+", encoding="utf-8") as file:
+            with open(folder_path + "/config/识别结果.txt", "a+", encoding="utf-8") as file:
                 file.write(content)
 
             use_translate_signal.emit(signal_list, original, data)
@@ -116,7 +116,7 @@ class TranslateThread(QThread):
         else:
             data["sign"] += 1
             with open(folder_path + '/config/settin.json', 'w') as file:
-                json.dump(data, file)
+                json.dump(data, file, indent=2)
             try:
                 if data["sign"] % 2 == 0:
                     self.window.StartButton.setIcon(qtawesome.icon('fa.pause', color='white'))
@@ -130,8 +130,6 @@ class TranslateThread(QThread):
                         try:
                             if self.window.thread_state == 0:
                                 translate(self.window, data, self.use_translate_signal)
-                            sec = data["translateSpeed"] - 0.4
-                            time.sleep(sec)
 
                         except Exception:
                             print_exc()

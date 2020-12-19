@@ -19,8 +19,7 @@ class Range(QMainWindow):
 
             # 窗口无标题栏、窗口置顶、窗口透明
             self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.Tool)
-            # self.setAttribute(Qt.WA_TranslucentBackground)
-            self.setWindowOpacity(0.1)
+            self.setAttribute(Qt.WA_TranslucentBackground)
 
             self.Label = QLabel(self)
             self.Label.setObjectName("dragLabel")
@@ -49,17 +48,18 @@ class Range(QMainWindow):
             self.Button.clicked.connect(self.close)
             self.Button.hide()
 
-            # 右下角用于拉伸界面的控件, mac下窗口全透明,右下角不能拉伸
-            # self.statusbar = QStatusBar(self)
-            # self.setStatusBar(self.statusbar)
+            # 右下角用于拉伸界面的控件
+            self.statusbar = QStatusBar(self)
+            self.setStatusBar(self.statusbar)
         except Exception:
             print_exc()
 
     # 鼠标移动事件
     def mouseMoveEvent(self, e: QMouseEvent):
         try:
-            self._endPos = e.pos() - self._startPos
-            self.move(self.pos() + self._endPos)
+            if self._startPos is not None:
+                self._endPos = e.pos() - self._startPos
+                self.move(self.pos() + self._endPos)
         except Exception:
             print_exc()
 
@@ -108,14 +108,15 @@ class Range(QMainWindow):
             Y1 = rect.top()
             X2 = rect.left() + rect.width()
             Y2 = rect.top() + rect.height()
-            with open(folder_path + '/config/settin.json') as file:
+            set_path = folder_path + '/config/settin.json'
+            with open(set_path) as file:
                 data = json.load(file)
                 data["range"]["X1"] = X1
                 data["range"]["Y1"] = Y1
                 data["range"]["X2"] = X2
                 data["range"]["Y2"] = Y2
-            with open(folder_path + '/config/settin.json', 'w') as file:
-                json.dump(data, file)
+            with open(set_path, 'w') as file:
+                json.dump(data, file, indent=2)
 
         except Exception:
             print_exc()
