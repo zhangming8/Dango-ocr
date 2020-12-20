@@ -9,7 +9,7 @@ import sys
 import json
 from traceback import print_exc
 
-from ScreenRate import folder_path
+from configs import folder_path
 
 
 class WScreenShot(QWidget):

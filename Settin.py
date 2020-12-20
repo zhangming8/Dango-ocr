@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 import json
 
-
-from ScreenRate import get_screen_rate, folder_path
+from ScreenRate import get_screen_rate
 from API import MessageBox
+from configs import Config, folder_path
+
+config = Config()
 
 
 class SettinInterface(QWidget):
@@ -72,18 +73,15 @@ class SettinInterface(QWidget):
         self.translateSource_label_6 = QtWidgets.QLabel(self.tab_2)
         self.translateSource_label_6.setGeometry(
             QtCore.QRect(30 * self.rate, 20 * self.rate, 151 * self.rate, 16 * self.rate))
-        self.translateSource_label_6.setText("识别的原语言：")
+        self.translateSource_label_6.setText("待识别的语言：")
 
         # 翻译语种comboBox
         self.language_comboBox = QtWidgets.QComboBox(self.tab_2)
         self.language_comboBox.setGeometry(
             QtCore.QRect(195 * self.rate, 20 * self.rate, 131 * self.rate, 22 * self.rate))
-        self.language_comboBox.addItem("")
-        self.language_comboBox.addItem("")
-        self.language_comboBox.addItem("")
-        self.language_comboBox.setItemText(0, "日语（Japanese）")
-        self.language_comboBox.setItemText(1, "英语（English）")
-        self.language_comboBox.setItemText(2, "韩语（Korean）")
+        for idx, language_name in enumerate(config.language_name):
+            self.language_comboBox.addItem("")
+            self.language_comboBox.setItemText(idx, language_name[1])
         self.language_comboBox.setStyleSheet("background: rgba(255, 255, 255, 0.4);")
         self.language_comboBox.setCurrentIndex(self.language)
 
@@ -148,7 +146,7 @@ class SettinInterface(QWidget):
             QtCore.QRect(30 * self.rate, 275 * self.rate, 160 * self.rate, 16 * self.rate))
         self.shortcutKey1_checkBox.setStyleSheet("background: transparent;")
         self.shortcutKey1_checkBox.setChecked(self.showHotKey1)
-        self.shortcutKey1_checkBox.setText("识别快捷键：")
+        self.shortcutKey1_checkBox.setText("是否使用识别快捷键：")
 
         # 翻译键的快捷键
         self.HotKey1_ComboBox = QtWidgets.QComboBox(self.tab_2)
@@ -166,7 +164,7 @@ class SettinInterface(QWidget):
             QtCore.QRect(30 * self.rate, 315 * self.rate, 160 * self.rate, 16 * self.rate))
         self.shortcutKey2_checkBox.setStyleSheet("background: transparent;")
         self.shortcutKey2_checkBox.setChecked(self.showHotKey2)
-        self.shortcutKey2_checkBox.setText("截屏快捷键：")
+        self.shortcutKey2_checkBox.setText("是否使用截屏快捷键：")
 
         # 范围键的快捷键
         self.HotKey2_ComboBox = QtWidgets.QComboBox(self.tab_2)
@@ -289,13 +287,7 @@ class SettinInterface(QWidget):
         self.horizontal = self.data["horizontal"]
 
         # 获取翻译语言预设值
-        self.language = self.data["language"]
-        if self.language == 'ENG':
-            self.language = 1
-        elif self.language == 'KOR':
-            self.language = 2
-        else:
-            self.language = 0
+        self.language = config.language_map_reverse[self.data["language"]]
 
     def get_font_color(self):  # 各翻译源字体颜色
         color = QColorDialog.getColor()
@@ -362,12 +354,7 @@ class SettinInterface(QWidget):
 
     def save_language(self):  # 保存翻译语种
 
-        if self.language_comboBox.currentIndex() == 1:
-            self.data["language"] = 'ENG'
-        elif self.language_comboBox.currentIndex() == 2:
-            self.data["language"] = 'KOR'
-        else:
-            self.data["language"] = 'JAP'
+        self.data["language"] = config.language_map[self.language_comboBox.currentIndex()][0]
 
     def save_showHotKeyValue1(self):  # 保存翻译键快捷键
         HotKey_index = self.HotKey1_ComboBox.currentIndex()
@@ -405,5 +392,6 @@ if __name__ == "__main__":
     screen_scale_rate = get_screen_rate()
     APP = QApplication(sys.argv)
     Settin = SettinInterface(screen_scale_rate)
+    Settin.SaveButton.clicked.connect(Settin.save_language)
     Settin.show()
     sys.exit(APP.exec_())

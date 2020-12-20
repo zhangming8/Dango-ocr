@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import os
 from PyQt5.QtWidgets import *
 import json
 import qtawesome
@@ -13,8 +12,11 @@ from Range import WScreenShot
 from chooseRange import Range
 from API import MessageBox
 from Settin import SettinInterface
-from ScreenRate import get_screen_rate, folder_path
+from ScreenRate import get_screen_rate
 from hotKey import pyhk
+from configs import Config, folder_path
+
+config = Config()
 
 
 class Translater():
@@ -74,7 +76,6 @@ class Translater():
     def close(self):
 
         path = folder_path + "/config/识别结果.txt"
-        path = path.replace("\\", "/")
         MessageBox('贴心小提示~', '结果已自动保存至\n%s\n可自行定期清理' % path)
         self.Init.close()  # 关闭翻译界面
         if pyhk is not None:
@@ -98,8 +99,8 @@ class Translater():
     # 刷新主界面
     def updata_Init(self):
 
-        # self.Settin.close()  # 关闭设置页面
         self.Settin.save_settin()  # 保存设置
+        self.Settin.close()
         self.open_settin()
 
         # 刷新翻译界面的背景透明度
@@ -113,23 +114,24 @@ class Translater():
                                                font-weight: bold;\
                                                background-color:rgba(62, 62, 62, %s)"
                                               % (horizontal))
+        self.Init.languageText.setText(config.letter_chinese_dict[self.data["language"]])
 
-        # 是否注销翻译键快捷键
-        if self.id_translate:
-            self.hotKey.removeHotkey(id=self.id_translate)
-        # 是否注销范围键快捷键
-        if self.id_range:
-            self.hotKey.removeHotkey(id=self.id_range)
-        # 是否启用翻译键快捷键
-        if self.data["showHotKey1"] == "True":
-            self.id_translate = self.hotKey.addHotkey([self.data["showHotKeyValue1"]], self.Init.start_login)
-        # 是否截图键快捷键
-        if self.data["showHotKey2"] == "True":
-            self.id_range = self.hotKey.addHotkey([self.data["showHotKeyValue2"]], self.goto_range)
+        if pyhk is not None:
+            # 是否注销翻译键快捷键
+            if self.id_translate:
+                self.hotKey.removeHotkey(id=self.id_translate)
+            # 是否注销范围键快捷键
+            if self.id_range:
+                self.hotKey.removeHotkey(id=self.id_range)
+            # 是否启用翻译键快捷键
+            if self.data["showHotKey1"] == "True":
+                self.id_translate = self.hotKey.addHotkey([self.data["showHotKeyValue1"]], self.Init.start_login)
+            # 是否截图键快捷键
+            if self.data["showHotKey2"] == "True":
+                self.id_range = self.hotKey.addHotkey([self.data["showHotKeyValue2"]], self.goto_range)
 
-        if pyhk is not None and not self.thread_hotKey.isAlive():
-            self.thread_hotKey.start()
-        # self.Init.show()  # 打开翻译界面
+            if not self.thread_hotKey.isAlive():
+                self.thread_hotKey.start()
 
     # 登录成功后
     def Login_success(self):
@@ -148,6 +150,8 @@ class Translater():
 
             # 点击设置键后执行的函数
             self.Init.SettinButton.clicked.connect(self.goto_settin)
+            # 点击语言提示按钮
+            self.Init.languageText.clicked.connect(self.goto_settin)
             # 点击范围键后执行的函数
             self.Init.RangeButton.clicked.connect(self.goto_range)
             # 点击退出键后执行的函数

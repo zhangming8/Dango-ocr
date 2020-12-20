@@ -4,12 +4,15 @@ import requests
 from base64 import b64encode
 import json
 from traceback import print_exc
+import cv2
 
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui
 
-from ScreenRate import folder_path
+from configs import Config, folder_path
+
+config = Config()
 
 
 # 出错时停止翻译状态
@@ -40,15 +43,18 @@ def MessageBox(title, text):
     messageBox.exec_()
 
 
-def orc(data):
-    language = data["language"]  # 翻译语种
-    port = "8811"
-    request_url = "" # 设置自己的服务器
-    f = open(folder_path + '/config/image.jpg', 'rb')
-    img = b64encode(f.read())
-    data = {} # 设置自己的服务器
+def image_to_base64(image_np):
+    image = cv2.imencode('.jpg', image_np)[1]
+    image_code = str(b64encode(image))[2:-1]
+    return image_code
+
+
+def orc(data, image):
+    img = image_to_base64(image)
+    data = {"image": img, "language_type": data["language"], "user_id": "234232", "platform": "win32"}
+
     try:
-        response = requests.post(request_url, data=data, timeout=20)
+        response = requests.post(config.ocr_request_url, data=data, timeout=20)
 
     except TypeError:
         print_exc()
@@ -66,7 +72,7 @@ def orc(data):
             text = one_ann["text"]
             conf = one_ann["confidence"]
             points = one_ann["text_region"]
-            sentence += text
+            sentence += (" " + text)
 
         return True, sentence
 

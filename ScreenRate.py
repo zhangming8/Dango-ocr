@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-import sys
-
-# mac 系统下打包后需要全路径不能使用相对路径
-folder_path = os.path.dirname(os.path.realpath(sys.argv[0]))
-
 try:
     from win32 import win32api, win32gui, win32print
     from win32.lib import win32con

@@ -6,7 +6,7 @@ import json
 from js2py import EvalJs
 import os
 
-from ScreenRate import folder_path
+from configs import folder_path
 
 
 class Voice():

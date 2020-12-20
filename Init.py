@@ -11,8 +11,11 @@ from threading import Thread
 
 from Translate import TranslateThread
 from switch import SwitchBtn
-from ScreenRate import get_screen_rate, folder_path
+from ScreenRate import get_screen_rate
 from playVoice import Voice
+from configs import Config, folder_path
+
+config = Config()
 
 
 class UseTranslateThread(QObject):
@@ -61,6 +64,7 @@ class MainInterface(QMainWindow):
         self._right_rect = []
         self._bottom_rect = []
         self._corner_rect = []
+        self.image = None
 
     def init_ui(self):
 
@@ -120,10 +124,10 @@ class MainInterface(QMainWindow):
         self.translateText.append("欢迎~ 么么哒~")
         self.format.setTextOutline(QPen(QColor('#FF69B4'), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
         self.translateText.mergeCurrentCharFormat(self.format)
-        self.translateText.append("文字识别结果显示在这里")
+        self.translateText.append("点击设置修改待识别语言类型")
         self.format.setTextOutline(QPen(QColor('#674ea7'), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
         self.translateText.mergeCurrentCharFormat(self.format)
-        self.translateText.append("点击第三个按钮进行截屏识图")
+        self.translateText.append("点击截屏按钮选择识图区域")
 
         # 翻译框根据内容自适应大小
         self.document = self.translateText.document()
@@ -185,17 +189,18 @@ class MainInterface(QMainWindow):
         languageFont = QFont()
         languageFont.setFamily("华康方圆体W7")
         languageFont.setPointSize(10)
-        self.languageText = QTextBrowser(self)
-        self.languageText.setGeometry(423 * self.rate, 5 * self.rate, 45 * self.rate, 20 * self.rate)
-        self.languageText.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.languageText.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.languageText = QPushButton(self)
+        self.languageText.setIconSize(QSize(20, 20))
+        self.languageText.setGeometry(QRect(423 * self.rate, 5 * self.rate, 45 * self.rate, 20 * self.rate))
+        self.languageText.setToolTip('<b>待识别的语言类型</b>')
         self.languageText.setStyleSheet("border-width:0;\
                                                   border-style:outset;\
                                                   border-top:0px solid #e8f3f9;\
                                                   color:white;\
                                                   background-color:rgba(143, 143, 143, 0)")
+        self.languageText.setCursor(QCursor(Qt.PointingHandCursor))
+        self.languageText.setText(config.letter_chinese_dict[self.data["language"]])
         self.languageText.setFont(languageFont)
-        self.languageText.append("日-文")
         self.languageText.hide()
 
         # 设置按钮
