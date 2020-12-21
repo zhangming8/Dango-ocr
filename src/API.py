@@ -17,11 +17,11 @@ config = Config()
 
 # 出错时停止翻译状态
 def error_stop():
-    with open(folder_path+'/config/settin.json') as file:
+    with open(folder_path + '/config/settin.json') as file:
         data = json.load(file)
     if data["sign"] % 2 == 0:
         data["sign"] = 1
-        with open(folder_path+'/config/settin.json', 'w') as file:
+        with open(folder_path + '/config/settin.json', 'w') as file:
             json.dump(data, file, indent=2)
 
 
@@ -33,7 +33,7 @@ def MessageBox(title, text):
     messageBox.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.WindowMaximizeButtonHint | Qt.MSWindowsFixedSizeDialogHint)
     # 窗口图标
     icon = QtGui.QIcon()
-    icon.addPixmap(QtGui.QPixmap(folder_path+"/config/图标.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+    icon.addPixmap(QtGui.QPixmap(folder_path + "/config/图标.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
     messageBox.setWindowIcon(icon)
     # 设定窗口标题和内容
     messageBox.setWindowTitle(title)
@@ -51,10 +51,10 @@ def image_to_base64(image_np):
 
 def orc(data, image):
     img = image_to_base64(image)
-    data = {"image": img, "language_type": data["language"], "user_id": "234232", "platform": "win32"}
+    data = {"image": img, "language_type": data["language"], "user_id": config.mac, "platform": config.platform}
 
     try:
-        response = requests.post(config.ocr_request_url, data=data, timeout=20)
+        response = requests.post(config.ocr_request_url, data=data, timeout=config.time_out)
 
     except TypeError:
         print_exc()
@@ -64,8 +64,6 @@ def orc(data, image):
 
     if response:
         result = response.json()['data']['result'][0]  # batch result, now we only use first one
-        # print(language)
-        # print(result)
 
         sentence = ""
         for one_ann in result:

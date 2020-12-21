@@ -12,7 +12,7 @@ import qtawesome
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import *
 
-from API import orc
+from src.API import orc
 from configs import folder_path, Config
 
 config = Config()
@@ -76,6 +76,8 @@ def calculate(image1, image2):
 
 # 判断图片相似度
 def compare_image(imageA, imageB):
+    if imageA is None or imageB is None:
+        return 0.2
     grayA = cvtColor(imageA, COLOR_BGR2GRAY)
     grayB = cvtColor(imageB, COLOR_BGR2GRAY)
 

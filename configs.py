@@ -1,9 +1,11 @@
 # -*- coding:utf-8 -*-
 import os
 import sys
+import uuid
 
 # mac 系统下打包后需要全路径不能使用相对路径
-folder_path = os.path.dirname(os.path.realpath(sys.argv[0])).replace("\\", "/")
+# folder_path = os.path.dirname(os.path.realpath(sys.argv[0])).replace("\\", "/")
+folder_path = os.path.dirname(os.path.realpath(__file__)).replace("\\", "/")
 
 
 class Config(object):
@@ -17,9 +19,12 @@ class Config(object):
     similarity_score = 0.95
     # 控制帧率(10FPs)
     delay_time = 1. / 10
-
+    # 请求time out
+    time_out = 10
     debug = False
 
     language_map = {idx: name for idx, name in enumerate(language_name)}
     language_map_reverse = {v[0]: k for k, v in language_map.items()}
     letter_chinese_dict = {i: k for i, j, k in language_name}
+    mac = ''
+    platform = sys.platform

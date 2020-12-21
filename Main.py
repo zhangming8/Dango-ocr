@@ -7,13 +7,13 @@ import qtawesome
 from traceback import print_exc
 from threading import Thread
 
-from Init import MainInterface
-from Range import WScreenShot
-from chooseRange import Range
-from API import MessageBox
-from Settin import SettinInterface
-from ScreenRate import get_screen_rate
-from hotKey import pyhk
+from src.Init import MainInterface
+from src.Range import WScreenShot
+from src.chooseRange import Range
+from src.API import MessageBox
+from src.Settin import SettinInterface
+from src.ScreenRate import get_screen_rate
+from src.hotKey import pyhk
 from configs import Config, folder_path
 
 config = Config()
@@ -101,6 +101,7 @@ class Translater():
 
         self.Settin.save_settin()  # 保存设置
         self.Settin.close()
+        self.Init.image = None
         self.open_settin()
 
         # 刷新翻译界面的背景透明度

@@ -9,10 +9,10 @@ from traceback import print_exc
 from pyperclip import copy
 from threading import Thread
 
-from Translate import TranslateThread
-from switch import SwitchBtn
-from ScreenRate import get_screen_rate
-from playVoice import Voice
+from src.Translate import TranslateThread
+from src.switch import SwitchBtn
+from src.ScreenRate import get_screen_rate
+from src.playVoice import Voice
 from configs import Config, folder_path
 
 config = Config()
