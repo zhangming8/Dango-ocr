@@ -77,7 +77,7 @@ def MessageBox(title, text):
     messageBox.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.WindowMaximizeButtonHint | Qt.MSWindowsFixedSizeDialogHint)
     # 窗口图标
     icon = QtGui.QIcon()
-    icon.addPixmap(QtGui.QPixmap(folder_path + "/config/图标.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+    icon.addPixmap(QtGui.QPixmap(folder_path + "/config/logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
     messageBox.setWindowIcon(icon)
     # 设定窗口标题和内容
     messageBox.setWindowTitle(title)

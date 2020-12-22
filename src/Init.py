@@ -80,7 +80,7 @@ class MainInterface(QMainWindow):
 
         # 窗口图标
         self.icon = QIcon()
-        self.icon.addPixmap(QPixmap(folder_path + "/config/图标.ico"), QIcon.Normal, QIcon.On)
+        self.icon.addPixmap(QPixmap(folder_path + "/config/logo.ico"), QIcon.Normal, QIcon.On)
         self.setWindowIcon(self.icon)
 
         # 系统托盘

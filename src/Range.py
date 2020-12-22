@@ -9,6 +9,7 @@ import sys
 import json
 from traceback import print_exc
 
+sys.path.append(".")
 from configs import folder_path
 
 
@@ -17,7 +18,8 @@ class WScreenShot(QWidget):
     def __init__(self, Init, chooseRange, parent=None):
 
         super(WScreenShot, self).__init__(parent)
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)  # | Qt.Tool)
+        self.setWindowState(Qt.WindowFullScreen | Qt.WindowActive)
         self.setStyleSheet('''background-color:black; ''')
         self.setWindowOpacity(0.6)
         desktopRect = QDesktopWidget().screenGeometry()
@@ -88,7 +90,7 @@ class WScreenShot(QWidget):
             Y1 = Y2
             Y2 = tmp
 
-        with open(folder_path+'/config/settin.json') as file:
+        with open(folder_path + '/config/settin.json') as file:
             data = json.load(file)
 
         data["range"]["X1"] = X1
@@ -96,12 +98,16 @@ class WScreenShot(QWidget):
         data["range"]["X2"] = X2
         data["range"]["Y2"] = Y2
 
-        with open(folder_path+'/config/settin.json', 'w') as file:
+        with open(folder_path + '/config/settin.json', 'w') as file:
             json.dump(data, file, indent=2)
 
         self.chooseRange.setGeometry(X1, Y1, X2 - X1, Y2 - Y1)
         self.chooseRange.Label.setGeometry(0, 0, X2 - X1, Y2 - Y1)
         self.chooseRange.show()
+        # screenshot = QApplication.primaryScreen().grabWindow(QApplication.desktop().winId())
+        # screenshot.save(folder_path + '/config/full.jpg', format='JPG', quality=100)
+        # outputRegion = screenshot.copy(QRect(int(X1), int(Y1), int(X2 - X1), int(Y2 - Y1)))
+        # outputRegion.save(folder_path + '/config/image.jpg', format='JPG', quality=100)
 
     def updata_Init(self):
 
@@ -125,8 +131,15 @@ class WScreenShot(QWidget):
 
 
 if __name__ == '__main__':
+    from src.Init import MainInterface
+    from src.chooseRange import Range
+
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     app = QApplication(sys.argv)
-    win = WScreenShot()
+    Init = MainInterface(1, 'admin')
+    chooseRange = Range(100, 100, 500, 200)
+
+    win = WScreenShot(Init, chooseRange)
     win.show()
+
     app.exec_()

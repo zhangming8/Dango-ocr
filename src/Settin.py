@@ -47,7 +47,7 @@ class SettinInterface(QWidget):
 
         # 窗口图标
         self.icon = QtGui.QIcon()
-        self.icon.addPixmap(QtGui.QPixmap(folder_path+"/config/图标.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        self.icon.addPixmap(QtGui.QPixmap(folder_path+"/config/logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
         self.setWindowIcon(self.icon)
 
         # 顶部工具栏

@@ -13,9 +13,9 @@ DangoOCR是一款开源的屏幕文字识别工具,通过设置识别范围,自�
    
 ### TODO计划
 + 增加翻译功能
++ 算法轻量化,实现离线文字识别及翻译
 + 增加语音识别功能
 + 增加语音合成功能(给一段文字合成语音)
-+ 增加额外功能, 如人脸检测/抠图, 物体检测, 人脸转卡通动漫...
 
 ### 使用说明(以Windows为例)：
 
@@ -27,9 +27,14 @@ DangoOCR是一款开源的屏幕文字识别工具,通过设置识别范围,自�
 </div>
 
 
-+ 2 软件界面如下(日语识别)。
++ 3 软件界面如下(日语识别)。
 <div align="center">
     <img src="./images/japanese.jpg" width="500">
+</div>
+
++ 4 debug模式下会把识别结果进行保存(configs.py  debug=True)
+<div align="center">
+    <img src="./images/debug.jpg" width="500">
 </div>
 
 
