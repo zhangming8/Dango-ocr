@@ -21,10 +21,10 @@ class Config(object):
     delay_time = 1. / 10
     # 请求time out
     time_out = 10
-    debug = False
+    debug = False  # True
 
     language_map = {idx: name for idx, name in enumerate(language_name)}
     language_map_reverse = {v[0]: k for k, v in language_map.items()}
     letter_chinese_dict = {i: k for i, j, k in language_name}
-    mac = ''
+    mac = "123"
     platform = sys.platform

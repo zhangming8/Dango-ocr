@@ -27,7 +27,7 @@ def pixmap_to_array(pixmap, channels_count=4):
     s = image.bits().asstring(width * height * channels_count)
     img = np.fromstring(s, dtype=np.uint8).reshape((height, width, channels_count))
     img = img[:, :, :3]
-    return img
+    return img.astype(np.uint8)
 
 
 # 截图
