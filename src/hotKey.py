@@ -1,14 +1,15 @@
 # _*_ coding:UTF-8 _*_
 
-from threading import Thread
-import time
-
 try:
-    import pythoncom, PyHook3, ctypes, _thread
+    from pythoncom import PumpMessages
+    from PyHook3 import HookManager
+    from ctypes import windll
+    from _thread import start_new_thread
 
     pyhook_flag = True
 except:
-    print("[INFO] 无法设置快捷键")
+    from src.API import write_error
+    write_error("[INFO] 无法设置快捷键")
     pyhook_flag = False
 
 
@@ -40,7 +41,7 @@ class pyhook:
         self.KeyID2MEID = self.createMergeKeys()
 
         # create a hook manager
-        self.hm = PyHook3.HookManager()
+        self.hm = HookManager()
 
         # watch for all keyboard events
         self.hm.KeyDown = self.OnKeyDown
@@ -64,11 +65,11 @@ class pyhook:
     def start(self):
         """Start pyhk to check for hotkeys"""
         while True:
-            pythoncom.PumpMessages()
+            PumpMessages()
 
     def end(self):
         """End pyhk to check for hotkeys"""
-        ctypes.windll.user32.PostQuitMessage(0)
+        windll.user32.PostQuitMessage(0)
 
     # --------------------------------------------------------
 
@@ -512,7 +513,7 @@ class ExecFunThread:
 
     def Start(self):
         self.running = True
-        _thread.start_new_thread(self.Run, ())
+        start_new_thread(self.Run, ())
 
     def IsRunning(self):
         return self.running
@@ -549,6 +550,8 @@ else:
     pyhk = None
 
 if __name__ == '__main__':
+    from threading import Thread
+    import time
 
     if pyhk is not None:
         thread_hotKey = Thread(target=test)

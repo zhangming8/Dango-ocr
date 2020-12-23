@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
-import time
-import json
-import cv2
-from cv2 import cvtColor, COLOR_BGR2GRAY, imwrite
-import numpy as np
+from time import time, sleep
+from json import load, dump
+from cv2 import cvtColor, COLOR_BGR2GRAY, calcHist, resize
+from numpy import fromstring, uint8
 from pyperclip import copy
-from traceback import print_exc
+from traceback import format_exc
 from difflib import SequenceMatcher
-import qtawesome
+from qtawesome import icon as qticon
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import *
 
-from src.API import orc
+from src.API import orc, write_error
 from configs import folder_path, Config
 
 config = Config()
@@ -25,9 +24,9 @@ def pixmap_to_array(pixmap, channels_count=4):
 
     image = pixmap.toImage()
     s = image.bits().asstring(width * height * channels_count)
-    img = np.fromstring(s, dtype=np.uint8).reshape((height, width, channels_count))
+    img = fromstring(s, dtype=uint8).reshape((height, width, channels_count))
     img = img[:, :, :3]
-    return img.astype(np.uint8)
+    return img.astype(uint8)
 
 
 # 截图
@@ -43,13 +42,13 @@ def image_cut(data):
         pix = screen.grabWindow(QApplication.desktop().winId(), x1, y1, x2 - x1, y2 - y1)
         # pix.save(folder_path + '/config/image.jpg')
         image = pixmap_to_array(pix)
-        if config.debug:
-            save_img = folder_path + '/config/image.jpg'
-            print("保存截图: {}".format(save_img))
-            imwrite(save_img, image, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+        # if config.debug:
+        #     save_img = folder_path + '/config/image.jpg'
+        #     print("保存截图: {}".format(save_img))
+        #     imwrite(save_img, image)
 
     except Exception:
-        print_exc()
+        write_error(format_exc())
     return image
 
 
@@ -61,8 +60,8 @@ def get_equal_rate(str1, str2):
 
 # 计算单通道的直方图的相似值
 def calculate(image1, image2):
-    hist1 = cv2.calcHist([image1], [0], None, [256], [0.0, 255.0])
-    hist2 = cv2.calcHist([image2], [0], None, [256], [0.0, 255.0])
+    hist1 = calcHist([image1], [0], None, [256], [0.0, 255.0])
+    hist2 = calcHist([image2], [0], None, [256], [0.0, 255.0])
     # 计算直方图的重合度
     degree = 0
     for i in range(len(hist1)):
@@ -83,8 +82,8 @@ def compare_image(imageA, imageB):
 
     if grayA.shape != grayB.shape:
         new_shape = [(grayA.shape[0] + grayB.shape[0]) // 2, (grayA.shape[1] + grayB.shape[1]) // 2]
-        grayA = cv2.resize(grayA, (new_shape[1], new_shape[0]))
-        grayB = cv2.resize(grayB, (new_shape[1], new_shape[0]))
+        grayA = resize(grayA, (new_shape[1], new_shape[0]))
+        grayB = resize(grayB, (new_shape[1], new_shape[0]))
     else:
         if (imageA == imageB).all():
             return 1.
@@ -153,7 +152,7 @@ class TranslateThread(QThread):
     def run(self):
 
         with open(folder_path + '/config/settin.json') as file:
-            data = json.load(file)
+            data = load(file)
 
         if not self.mode:
             try:
@@ -161,38 +160,38 @@ class TranslateThread(QThread):
                     translate(self.window, data, self.use_translate_signal)
 
             except Exception:
-                print_exc()
+                write_error(format_exc())
         else:
             data["sign"] += 1
             with open(folder_path + '/config/settin.json', 'w') as file:
-                json.dump(data, file, indent=2)
+                dump(data, file, indent=2)
             try:
                 if data["sign"] % 2 == 0:
-                    self.window.StartButton.setIcon(qtawesome.icon('fa.pause', color='white'))
+                    self.window.StartButton.setIcon(qticon('fa.pause', color='white'))
 
                 while True:
-                    s1 = time.time()
+                    s1 = time()
                     with open(folder_path + '/config/settin.json') as file:
-                        data = json.load(file)
+                        data = load(file)
 
                     if data["sign"] % 2 == 0:
                         try:
                             if self.window.thread_state == 0:
-                                s2 = time.time()
+                                s2 = time()
                                 if s2 - s1 < config.delay_time:
                                     sleep_time = config.delay_time - (s2 - s1)
                                     if config.debug:
                                         print("自动模式 限制帧率, sleep 时间: {}".format(sleep_time))
-                                    time.sleep(sleep_time)
+                                    sleep(sleep_time)
 
                                 translate(self.window, data, self.use_translate_signal)
 
                         except Exception:
-                            print_exc()
+                            write_error(format_exc())
                             break
                     else:
-                        self.window.StartButton.setIcon(qtawesome.icon('fa.play', color='white'))
+                        self.window.StartButton.setIcon(qticon('fa.play', color='white'))
                         break
 
             except Exception:
-                print_exc()
+                write_error(format_exc())

@@ -2,15 +2,15 @@
 
 import sys
 from PyQt5.QtWidgets import *
-import json
-import qtawesome
-from traceback import print_exc
+from json import load, dump
+from qtawesome import icon as qticon
+from traceback import format_exc
 from threading import Thread
 
 from src.Init import MainInterface
 from src.Range import WScreenShot
 from src.chooseRange import Range
-from src.API import MessageBox
+from src.API import MessageBox, write_error
 from src.Settin import SettinInterface
 from src.ScreenRate import get_screen_rate
 from src.hotKey import pyhk
@@ -24,13 +24,13 @@ class Translater():
     def open_settin(self):
 
         with open(folder_path + '/config/settin.json') as file:
-            self.data = json.load(file)
+            self.data = load(file)
 
     # 保存配置文件
     def save_settin(self):
 
         with open(folder_path + '/config/settin.json', 'w') as file:
-            json.dump(self.data, file, indent=2)
+            dump(self.data, file, indent=2)
 
     # 设置快捷键
     def set_hotKey(self):
@@ -48,7 +48,7 @@ class Translater():
                 self.id_range = self.hotKey.addHotkey([self.data["showHotKeyValue2"]], self.goto_range)
 
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 进入范围选取
     def goto_range(self):
@@ -61,7 +61,7 @@ class Translater():
                 self.data["sign"] = 1  # 重置运行状态标志符
                 self.save_settin()
                 # 改变翻译键的图标为停止图标
-                self.Init.StartButton.setIcon(qtawesome.icon('fa.play', color='white'))
+                self.Init.StartButton.setIcon(qticon('fa.play', color='white'))
 
             self.Range.show()  # 打开范围界面
             self.Init.show()  # 翻译界面会被顶掉，再次打开
@@ -70,7 +70,8 @@ class Translater():
                 self.thread_hotKey.start()
 
         except Exception:
-            print_exc()
+            write_error(format_exc())
+
 
     # 退出程序
     def close(self):
@@ -90,7 +91,7 @@ class Translater():
             self.data["sign"] = 1  # 重置运行状态标志符
             self.save_settin()
             # 改变翻译键的图标为停止图标
-            self.Init.StartButton.setIcon(qtawesome.icon('fa.play', color='white'))
+            self.Init.StartButton.setIcon(qticon('fa.play', color='white'))
 
         # self.Init.close()  # 关闭翻译界面
         self.Settin.tabWidget.setCurrentIndex(0)  # 预设设置页面的初始为第一栏
@@ -163,8 +164,7 @@ class Translater():
             self.Settin.CancelButton.clicked.connect(self.Settin.close)
 
         except Exception:
-            print_exc()
-            input()
+            write_error(format_exc())
 
     # 主循环
     def main(self):
@@ -185,8 +185,7 @@ class Translater():
             App.exit(App.exec_())
 
         except Exception:
-            print_exc()
-            input()
+            write_error(format_exc())
 
 
 if __name__ == '__main__':

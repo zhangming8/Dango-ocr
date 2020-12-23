@@ -1,11 +1,12 @@
-import urllib.parse
+from urllib import parse
 from requests import Session
 from playsound import playsound
-from traceback import print_exc
-import json
+from traceback import format_exc
+from json import load
 from js2py import EvalJs
 import os
 
+from src.API import write_error
 from configs import folder_path
 
 
@@ -38,10 +39,10 @@ class Voice():
     def play_voice(self):
 
         with open(folder_path + '/config/settin.json') as file:
-            data = json.load(file)
+            data = load(file)
 
         try:
-            content = urllib.parse.quote(self.text)
+            content = parse.quote(self.text)
             tk = self.getTk()
             url = "https://translate.google.cn/translate_tts?ie=UTF-8&q=" + content + "&tl=" + data[
                 "BingLanguage"] + "&total=1&idx=0&textlen=107&tk=" + tk + "&client=webapp&prev=input"
@@ -54,7 +55,7 @@ class Voice():
             playsound(folder_path + '/config/voice.mp3')
 
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@
 
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui, QtWidgets
-import json
+from json import dump, load
 
 from src.ScreenRate import get_screen_rate
 from src.API import MessageBox
@@ -220,7 +220,7 @@ class SettinInterface(QWidget):
     def get_settin(self):  # 获取所有预设值
 
         with open(folder_path+'/config/settin.json') as file:
-            self.data = json.load(file)
+            self.data = load(file)
 
         # 获取各翻译源颜色预设值
         self.originalColor = self.data["fontColor"]["original"]
@@ -345,7 +345,7 @@ class SettinInterface(QWidget):
     def range(self):
 
         with open(folder_path+'/config/settin.json') as file:
-            data1 = json.load(file)
+            data1 = load(file)
 
             self.data["range"]["X1"] = data1["range"]["X1"]
             self.data["range"]["Y1"] = data1["range"]["Y1"]
@@ -381,7 +381,7 @@ class SettinInterface(QWidget):
         self.save_showHotKeyValue2()
 
         with open(folder_path+'/config/settin.json', 'w') as file:
-            json.dump(self.data, file, indent=2)
+            dump(self.data, file, indent=2)
 
         MessageBox('保存设置', '保存成功啦 ヾ(๑╹◡╹)ﾉ"')
 

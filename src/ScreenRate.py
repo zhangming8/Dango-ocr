@@ -1,25 +1,27 @@
 # -*- coding: utf-8 -*-
 
 try:
-    from win32 import win32api, win32gui, win32print
     from win32.lib import win32con
     from win32.win32api import GetSystemMetrics
+    from win32.win32gui import GetDC
+    from win32.win32print import GetDeviceCaps
 
     win32_flag = True
 except:
     win32_flag = False
     screen_scale_rate_ = 1
 
-    print("[INFO] 没有win32, 无法自动获取屏幕缩放比例,设置为: {}".format(screen_scale_rate_))
+    from src.API import write_error
+    write_error("[INFO] 没有win32, 无法自动获取屏幕缩放比例,设置为: {}".format(screen_scale_rate_))
 
 
 def get_real_resolution():
     """获取真实的分辨率"""
-    hDC = win32gui.GetDC(0)
+    hDC = GetDC(0)
     # 横向分辨率
-    w = win32print.GetDeviceCaps(hDC, win32con.DESKTOPHORZRES)
+    w = GetDeviceCaps(hDC, win32con.DESKTOPHORZRES)
     # 纵向分辨率
-    h = win32print.GetDeviceCaps(hDC, win32con.DESKTOPVERTRES)
+    h = GetDeviceCaps(hDC, win32con.DESKTOPVERTRES)
     return w, h
 
 

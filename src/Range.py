@@ -4,13 +4,14 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-import re
+from re import findall
 import sys
-import json
-from traceback import print_exc
+from json import load, dump
+from traceback import format_exc
 
 sys.path.append(".")
 from configs import folder_path
+from src.API import write_error
 
 
 class WScreenShot(QWidget):
@@ -48,7 +49,7 @@ class WScreenShot(QWidget):
                 pp.drawRect(QRect(self.startPoint, self.endPoint))
                 self.setMask(QBitmap(self.mask))
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     def mousePressEvent(self, event):
 
@@ -58,7 +59,7 @@ class WScreenShot(QWidget):
                 self.endPoint = self.startPoint
                 self.isDrawing = True
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     def mouseMoveEvent(self, event):
 
@@ -67,12 +68,12 @@ class WScreenShot(QWidget):
                 self.endPoint = event.pos()
                 self.update()
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     def getRange(self):
 
-        start = re.findall(r'(\d+), (\d+)', str(self.startPoint))[0]
-        end = re.findall(r'\d+, \d+', str(self.endPoint))[0]
+        start = findall(r'(\d+), (\d+)', str(self.startPoint))[0]
+        end = findall(r'\d+, \d+', str(self.endPoint))[0]
         end = end.split(', ')
 
         X1 = int(start[0])
@@ -91,7 +92,7 @@ class WScreenShot(QWidget):
             Y2 = tmp
 
         with open(folder_path + '/config/settin.json') as file:
-            data = json.load(file)
+            data = load(file)
 
         data["range"]["X1"] = X1
         data["range"]["Y1"] = Y1
@@ -99,7 +100,7 @@ class WScreenShot(QWidget):
         data["range"]["Y2"] = Y2
 
         with open(folder_path + '/config/settin.json', 'w') as file:
-            json.dump(data, file, indent=2)
+            dump(data, file, indent=2)
 
         self.chooseRange.setGeometry(X1, Y1, X2 - X1, Y2 - Y1)
         self.chooseRange.Label.setGeometry(0, 0, X2 - X1, Y2 - Y1)
@@ -115,7 +116,7 @@ class WScreenShot(QWidget):
             if self.Init.mode == False:
                 self.Init.start_login()
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     def mouseReleaseEvent(self, event):
 
@@ -127,7 +128,7 @@ class WScreenShot(QWidget):
                 self.close()
                 self.updata_Init()
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
 
 if __name__ == '__main__':

@@ -2,11 +2,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-import sys
-import json
-from traceback import print_exc
+from json import load, dump
+from traceback import format_exc
 
 from configs import folder_path
+from src.API import write_error
 
 
 class Range(QMainWindow):
@@ -51,8 +51,9 @@ class Range(QMainWindow):
             # 右下角用于拉伸界面的控件
             self.statusbar = QStatusBar(self)
             self.setStatusBar(self.statusbar)
+            self._startPos = None
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 鼠标移动事件
     def mouseMoveEvent(self, e: QMouseEvent):
@@ -61,7 +62,7 @@ class Range(QMainWindow):
                 self._endPos = e.pos() - self._startPos
                 self.move(self.pos() + self._endPos)
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 鼠标按下事件
     def mousePressEvent(self, e: QMouseEvent):
@@ -70,7 +71,7 @@ class Range(QMainWindow):
                 self._isTracking = True
                 self._startPos = QPoint(e.x(), e.y())
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 鼠标松开事件
     def mouseReleaseEvent(self, e: QMouseEvent):
@@ -80,7 +81,7 @@ class Range(QMainWindow):
                 self._startPos = None
                 self._endPos = None
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 鼠标进入控件事件
     def enterEvent(self, QEvent):
@@ -94,7 +95,7 @@ class Range(QMainWindow):
             self.Button.show()
             self.dragLabel.setStyleSheet("background-color:rgba(62, 62, 62, 0.3)")
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 鼠标离开控件事件
     def leaveEvent(self, QEvent):
@@ -110,19 +111,21 @@ class Range(QMainWindow):
             Y2 = rect.top() + rect.height()
             set_path = folder_path + '/config/settin.json'
             with open(set_path) as file:
-                data = json.load(file)
+                data = load(file)
                 data["range"]["X1"] = X1
                 data["range"]["Y1"] = Y1
                 data["range"]["X2"] = X2
                 data["range"]["Y2"] = Y2
             with open(set_path, 'w') as file:
-                json.dump(data, file, indent=2)
+                dump(data, file, indent=2)
 
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
 
 if __name__ == '__main__':
+    import sys
+
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     app = QApplication(sys.argv)
     win = Range(500, 500, 1000, 600)

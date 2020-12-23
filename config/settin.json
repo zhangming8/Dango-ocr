@@ -12,14 +12,14 @@
   "showHotKey2": "True",
   "fontType": "\u534e\u5eb7\u65b9\u5706\u4f53W7",
   "range": {
-    "X2": 1265,
-    "Y2": 601,
-    "X1": 149,
-    "Y1": 381
+    "X2": 737,
+    "Y2": 398,
+    "X1": 309,
+    "Y1": 241
   },
   "showHotKeyValue1": "F1",
   "showClipboard": "True",
-  "language": "JAP",
+  "language": "CH",
   "sign": 1,
   "showHotKey1": "True"
 }

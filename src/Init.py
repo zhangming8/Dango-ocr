@@ -3,9 +3,9 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import qtawesome
-import json
-from traceback import print_exc
+from qtawesome import icon as qticon
+from json import load, dump
+from traceback import format_exc
 from pyperclip import copy
 from threading import Thread
 
@@ -13,6 +13,7 @@ from src.Translate import TranslateThread
 from src.switch import SwitchBtn
 from src.ScreenRate import get_screen_rate
 from src.playVoice import Voice
+from src.API import write_error
 from configs import Config, folder_path
 
 config = Config()
@@ -139,7 +140,7 @@ class MainInterface(QMainWindow):
         self.dragLabel.setGeometry(0, 0, 4000 * self.rate, 2000 * self.rate)
 
         # 截屏范围按钮
-        self.RangeButton = QPushButton(qtawesome.icon('fa.crop', color='white'), "", self)
+        self.RangeButton = QPushButton(qticon('fa.crop', color='white'), "", self)
         self.RangeButton.setIconSize(QSize(20, 20))
         self.RangeButton.setGeometry(QRect(193 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.RangeButton.setToolTip('<b>范围 Range</b><br>框选要翻译的区域<br>需从左上到右下拖动')
@@ -148,7 +149,7 @@ class MainInterface(QMainWindow):
         self.RangeButton.hide()
 
         # 翻译按钮
-        self.StartButton = QPushButton(qtawesome.icon('fa.play', color='white'), "", self)
+        self.StartButton = QPushButton(qticon('fa.play', color='white'), "", self)
         self.StartButton.setIconSize(QSize(20, 20))
         self.StartButton.setGeometry(QRect(233 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.StartButton.setToolTip('<b>翻译 Translate</b><br>点击翻译（手动）<br>开始/停止（自动）')
@@ -158,7 +159,7 @@ class MainInterface(QMainWindow):
         self.StartButton.hide()
 
         # 复制按钮
-        self.CopyButton = QPushButton(qtawesome.icon('fa.copy', color='white'), "", self)
+        self.CopyButton = QPushButton(qticon('fa.copy', color='white'), "", self)
         self.CopyButton.setIconSize(QSize(20, 20))
         self.CopyButton.setGeometry(QRect(273 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.CopyButton.setToolTip('<b>复制 Copy</b><br>将当前识别到的文本<br>复制至剪贴板')
@@ -168,7 +169,7 @@ class MainInterface(QMainWindow):
         self.CopyButton.hide()
 
         # 朗读原文按钮
-        self.playVoiceButton = QPushButton(qtawesome.icon('fa.music', color='white'), "", self)
+        self.playVoiceButton = QPushButton(qticon('fa.music', color='white'), "", self)
         self.playVoiceButton.setIconSize(QSize(20, 20))
         self.playVoiceButton.setGeometry(QRect(313 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.playVoiceButton.setToolTip('<b>朗读原文 Play Voice</b><br>朗读识别到的原文')
@@ -204,7 +205,7 @@ class MainInterface(QMainWindow):
         self.languageText.hide()
 
         # 设置按钮
-        self.SettinButton = QPushButton(qtawesome.icon('fa.cog', color='white'), "", self)
+        self.SettinButton = QPushButton(qticon('fa.cog', color='white'), "", self)
         self.SettinButton.setIconSize(QSize(20, 20))
         self.SettinButton.setGeometry(QRect(478 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.SettinButton.setToolTip('<b>设置 Settin</b>')
@@ -213,7 +214,7 @@ class MainInterface(QMainWindow):
         self.SettinButton.hide()
 
         # 锁按钮
-        self.LockButton = QPushButton(qtawesome.icon('fa.lock', color='white'), "", self)
+        self.LockButton = QPushButton(qticon('fa.lock', color='white'), "", self)
         self.LockButton.setIconSize(QSize(20, 20))
         self.LockButton.setGeometry(QRect(522 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.LockButton.setToolTip('<b>锁定翻译界面 Lock</b>')
@@ -223,7 +224,7 @@ class MainInterface(QMainWindow):
         self.LockButton.hide()
 
         # 最小化按钮
-        self.MinimizeButton = QPushButton(qtawesome.icon('fa.minus', color='white'), "", self)
+        self.MinimizeButton = QPushButton(qticon('fa.minus', color='white'), "", self)
         self.MinimizeButton.setIconSize(QSize(20, 20))
         self.MinimizeButton.setGeometry(QRect(562 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.MinimizeButton.setToolTip('<b>最小化 Minimize</b>')
@@ -233,7 +234,7 @@ class MainInterface(QMainWindow):
         self.MinimizeButton.hide()
 
         # 退出按钮
-        self.QuitButton = QPushButton(qtawesome.icon('fa.times', color='white'), "", self)
+        self.QuitButton = QPushButton(qticon('fa.times', color='white'), "", self)
         self.QuitButton.setIconSize(QSize(20, 20))
         self.QuitButton.setGeometry(QRect(602 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.QuitButton.setToolTip('<b>退出程序 Quit</b>')
@@ -251,14 +252,14 @@ class MainInterface(QMainWindow):
 
         try:
             if self.lock_sign == 0:
-                self.LockButton.setIcon(qtawesome.icon('fa.unlock', color='white'))
+                self.LockButton.setIcon(qticon('fa.unlock', color='white'))
                 self.dragLabel.hide()
                 self.lock_sign = 1
 
                 if self.horizontal == 0.01:
                     self.horizontal = 0
             else:
-                self.LockButton.setIcon(qtawesome.icon('fa.lock', color='white'))
+                self.LockButton.setIcon(qticon('fa.lock', color='white'))
                 self.LockButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
                 self.dragLabel.show()
                 self.lock_sign = 0
@@ -274,7 +275,7 @@ class MainInterface(QMainWindow):
                                               background-color:rgba(62, 62, 62, %s)"
                                              % (self.horizontal))
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 当翻译内容改变时界面自适应窗口大小
     def textAreaChanged(self):
@@ -293,11 +294,11 @@ class MainInterface(QMainWindow):
             self.mode = False
 
             with open(folder_path + '/config/settin.json') as file:
-                data = json.load(file)
+                data = load(file)
                 data["sign"] = 1
             with open(folder_path + '/config/settin.json', 'w') as file:
-                json.dump(data, file, indent=2)
-            self.StartButton.setIcon(qtawesome.icon('fa.play', color='white'))
+                dump(data, file, indent=2)
+            self.StartButton.setIcon(qticon('fa.play', color='white'))
 
     # 鼠标移动事件
     def mouseMoveEvent(self, e: QMouseEvent):
@@ -309,7 +310,7 @@ class MainInterface(QMainWindow):
             self._endPos = e.pos() - self._startPos
             self.move(self.pos() + self._endPos)
         except Exception:
-            pass
+            write_error(format_exc())
 
     # 鼠标移动事件 mac
     # def mouseMoveEvent(self, QMouseEvent):
@@ -356,7 +357,7 @@ class MainInterface(QMainWindow):
                 self._isTracking = True
                 self._startPos = QPoint(e.x(), e.y())
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 鼠标按下事件 mac
     # def mousePressEvent(self, event):
@@ -384,7 +385,7 @@ class MainInterface(QMainWindow):
     #             self.move_drag_position = event.globalPos() - self.pos()
     #             event.accept()
     #     except Exception:
-    #         print_exc()
+    #         write_error(format_exc())
 
     # # 鼠标松开事件
     def mouseReleaseEvent(self, e: QMouseEvent):
@@ -398,7 +399,7 @@ class MainInterface(QMainWindow):
                 self._startPos = None
                 self._endPos = None
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 鼠标松开事件 mac
     # def mouseReleaseEvent(self, e: QMouseEvent):
@@ -417,7 +418,7 @@ class MainInterface(QMainWindow):
     #             self._bottom_drag = False
     #             self._right_drag = False
     #     except Exception:
-    #         print_exc()
+    #         write_error(format_exc())
 
     # 鼠标进入控件事件
     def enterEvent(self, QEvent):
@@ -443,7 +444,7 @@ class MainInterface(QMainWindow):
             self.setStyleSheet('QLabel#dragLabel {background-color:rgba(62, 62, 62, 0.3)}')
 
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     def resizeEvent(self, QResizeEvent):
         # 重新调整边界范围以备实现鼠标拖放缩放窗口大小，采用三个列表生成式生成三个列表
@@ -491,13 +492,13 @@ class MainInterface(QMainWindow):
             self.setStyleSheet('QLabel#dragLabel {background-color:none}')
 
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 获取界面预设参数
     def get_settin(self):
 
         with open(folder_path + '/config/settin.json') as file:
-            self.data = json.load(file)
+            self.data = load(file)
 
         # 翻译模式预设
         self.mode = False
@@ -515,14 +516,14 @@ class MainInterface(QMainWindow):
     def start_login(self):
 
         with open(folder_path + '/config/settin.json') as file:
-            data = json.load(file)
+            data = load(file)
 
         if data["sign"] % 2 == 0:
             data["sign"] += 1
             with open(folder_path + '/config/settin.json', 'w') as file:
-                json.dump(data, file, indent=2)
+                dump(data, file, indent=2)
 
-            self.StartButton.setIcon(qtawesome.icon('fa.play', color='white'))
+            self.StartButton.setIcon(qticon('fa.play', color='white'))
         else:
             thread = TranslateThread(self, self.mode)
             thread.use_translate_signal.connect(self.use_translate)
@@ -568,7 +569,7 @@ class MainInterface(QMainWindow):
             self.save_text(result, translate_type)
             self.thread_state -= 1  # 线程结束，减少线程数
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     # 语音朗读
     def play_voice(self):
@@ -580,7 +581,7 @@ class MainInterface(QMainWindow):
             thread.setDaemon(True)
             thread.start()
         except Exception:
-            print_exc()
+            write_error(format_exc())
 
     def save_text(self, text, translate_type):
 
