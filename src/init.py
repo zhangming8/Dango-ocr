@@ -9,11 +9,12 @@ from traceback import format_exc
 from pyperclip import copy
 from threading import Thread
 
-from src.Translate import TranslateThread
+from src.translate import TranslateThread
 from src.switch import SwitchBtn
-from src.ScreenRate import get_screen_rate
-from src.playVoice import Voice
-from src.API import write_error
+from src.screen_rate import get_screen_rate
+from src.play_voice import Voice
+from src.api import write_error
+from src.vis_result import VisResult
 from configs import Config, folder_path
 
 config = Config()
@@ -541,7 +542,7 @@ class MainInterface(QMainWindow):
         thread.start()
 
     # 并发执行所有翻译源
-    def use_translate(self, signal_list, original, data):
+    def use_translate(self, signal_list, original, data, result_with_location):
 
         # 翻译界面清屏
         self.translateText.clear()
@@ -551,6 +552,8 @@ class MainInterface(QMainWindow):
         self.translateText.setFont(self.Font)
 
         if "original" in signal_list or "error" in signal_list:
+            # self.vis_res = VisResult(np_img=self.image, result=result_with_location)
+            # self.vis_res.show()
             self.creat_thread(None, original, data, "original")
 
     # 将翻译结果打印

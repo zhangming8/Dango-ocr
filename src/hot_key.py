@@ -8,7 +8,7 @@ try:
 
     pyhook_flag = True
 except:
-    from src.API import write_error
+    from src.api import write_error
     write_error("[INFO] 无法设置快捷键")
     pyhook_flag = False
 

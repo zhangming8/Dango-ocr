@@ -7,13 +7,13 @@ from qtawesome import icon as qticon
 from traceback import format_exc
 from threading import Thread
 
-from src.Init import MainInterface
-from src.Range import WScreenShot
-from src.chooseRange import Range
-from src.API import MessageBox, write_error
-from src.Settin import SettinInterface
-from src.ScreenRate import get_screen_rate
-from src.hotKey import pyhk
+from src.init import MainInterface
+from src.range import WScreenShot
+from src.choose_range import Range
+from src.api import MessageBox, write_error
+from src.settin import SettinInterface
+from src.screen_rate import get_screen_rate
+from src.hot_key import pyhk
 from configs import Config, folder_path
 
 config = Config()
@@ -71,7 +71,6 @@ class Translater():
 
         except Exception:
             write_error(format_exc())
-
 
     # 退出程序
     def close(self):

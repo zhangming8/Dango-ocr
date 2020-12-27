@@ -6,7 +6,7 @@ from json import load, dump
 from traceback import format_exc
 
 from configs import folder_path
-from src.API import write_error
+from src.api import write_error
 
 
 class Range(QMainWindow):

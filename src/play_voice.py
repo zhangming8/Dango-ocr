@@ -6,7 +6,7 @@ from json import load
 from js2py import EvalJs
 import os
 
-from src.API import write_error
+from src.api import write_error
 from configs import folder_path
 
 

@@ -4,8 +4,8 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from json import dump, load
 
-from src.ScreenRate import get_screen_rate
-from src.API import MessageBox
+from src.screen_rate import get_screen_rate
+from src.api import MessageBox
 from configs import Config, folder_path
 
 config = Config()

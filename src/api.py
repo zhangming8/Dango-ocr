@@ -69,11 +69,11 @@ def orc(data, image):
         write_error("ocr识别服务:" + format_exc())
         sentence = ''
         error_stop()
-        return None, sentence
+        return None, sentence, []
 
     if response:
         result = response.json()['data']['result'][0]  # batch result, now we only use first one
-
+        # print(result)
         sentence = ""
         for one_ann in result:
             text = one_ann["text"]
@@ -81,8 +81,8 @@ def orc(data, image):
             points = one_ann["text_region"]
             sentence += (" " + text)
 
-        return True, sentence
+        return True, sentence, result
 
     else:
         sentence = 'OCR错误：response无响应'
-        return None, sentence
+        return None, sentence, []

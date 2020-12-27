@@ -11,7 +11,7 @@ except:
     win32_flag = False
     screen_scale_rate_ = 1
 
-    from src.API import write_error
+    from src.api import write_error
     write_error("[INFO] 没有win32, 无法自动获取屏幕缩放比例,设置为: {}".format(screen_scale_rate_))
 
 

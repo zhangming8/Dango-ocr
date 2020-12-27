@@ -11,7 +11,7 @@ from traceback import format_exc
 
 sys.path.append(".")
 from configs import folder_path
-from src.API import write_error
+from src.api import write_error
 
 
 class WScreenShot(QWidget):
@@ -132,8 +132,8 @@ class WScreenShot(QWidget):
 
 
 if __name__ == '__main__':
-    from src.Init import MainInterface
-    from src.chooseRange import Range
+    from src.init import MainInterface
+    from src.choose_range import Range
 
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     app = QApplication(sys.argv)
