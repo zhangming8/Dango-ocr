@@ -1,42 +1,42 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtCore import *
-from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtGui import QPixmap
 
 import numpy as np
 from cv2 import imread, cvtColor, COLOR_BGR2RGB
 import sys
-from traceback import format_exc
 
 sys.path.append(".")
 from configs import folder_path
-from src.api import write_error
 
 
 class VisResult(QWidget):
+    result_signal = pyqtSignal(str, dict, str)
 
-    def __init__(self, np_img, result, parent=None):
-        super(VisResult, self).__init__(parent)
+    def __init__(self, np_img, result, configs):
+        super(VisResult, self).__init__()
         self.setWindowState(Qt.WindowActive)
-        self.setWindowTitle("识别结果")
+        # 窗口置顶
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.setWindowTitle("修改识别结果")
 
         self.results = result
         img = cvtColor(np_img, COLOR_BGR2RGB)
         img_h, img_w, img_c = img.shape
         self.img_w = img_w
 
-        img_show = np.zeros((img_h * 2, img_w * 3, img_c), dtype=np.uint8) + 255
+        img_show_h, img_show_w = max(50, img_h), max(200, img_w)
+        img_show = np.zeros((img_show_h * 3, img_show_w * 2, img_c), dtype=np.uint8) + 255
         img_show[:img_h, :img_w, :] = img
         img_show[0:img_h, img_w, :] = 128
 
-        self.setGeometry(200, 200, img_w * 2, img_h)
-        self.setMinimumHeight(img_h)
-        self.setMinimumWidth(img_w)
-        self.setMaximumHeight(img_show.shape[0])
-        self.setMaximumWidth(img_show.shape[1])
+        self.setMinimumHeight(img_show_h + 60)
+        self.setMinimumWidth(img_show_w * 2)
+        self.setMaximumHeight(img_show_h + 60)
+        self.setMaximumWidth(img_show_w * 2)
 
         frame = QtGui.QImage(img_show.data, img_show.shape[1], img_show.shape[0], img_show.shape[1] * img_show.shape[2],
                              QtGui.QImage.Format_RGB888)
@@ -49,21 +49,25 @@ class VisResult(QWidget):
 
         # 设置保存按钮
         self.SaveButton = QtWidgets.QPushButton(self)
-        self.SaveButton.setGeometry(QtCore.QRect(img_w//5, img_h+20, 90, 30))
+        self.SaveButton.setGeometry(QtCore.QRect(img_show_w - 170, img_show_h + 20, 90, 30))
         self.SaveButton.setStyleSheet("background: rgba(255, 255, 255, 0.4);font: 12pt;")
-        self.SaveButton.setText("保 存")
+        self.SaveButton.setText("确 定")
+        self.SaveButton.clicked.connect(self.send_text)
 
         # 设置导出按钮
         self.SaveButton = QtWidgets.QPushButton(self)
-        self.SaveButton.setGeometry(QtCore.QRect(img_w, img_h + 20, 90, 30))
+        self.SaveButton.setGeometry(QtCore.QRect(img_show_w - 45, img_show_h + 20, 90, 30))
         self.SaveButton.setStyleSheet("background: rgba(255, 255, 255, 0.4);font: 12pt;")
-        self.SaveButton.setText("导出")
+        self.SaveButton.setText("导 出")
 
         # 设置返回按钮
         self.CancelButton = QtWidgets.QPushButton(self)
-        self.CancelButton.setGeometry(QtCore.QRect(8*img_w//5, img_h+20, 90, 30))
+        self.CancelButton.setGeometry(QtCore.QRect(img_show_w + 175 - 90, img_show_h + 20, 90, 30))
         self.CancelButton.setStyleSheet("background: rgba(255, 255, 255, 0.4);font: 12pt")
-        self.CancelButton.setText("退 出")
+        self.CancelButton.setText("取 消")
+        self.CancelButton.clicked.connect(self.close)
+
+        self.configs = configs
 
     # 绘制事件
     def paintEvent(self, event):
@@ -98,6 +102,7 @@ class VisResult(QWidget):
             qp.drawPolygon(polygon)
 
     def draw_text(self, img_w):
+        self.vis_text_result = []
         for res in self.results:
             text = res['text']
             text_region = res["text_region"]
@@ -113,6 +118,14 @@ class VisResult(QWidget):
             vis_text.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
             vis_text.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
             vis_text.setPlainText(text)
+            self.vis_text_result.append(vis_text)
+
+    def send_text(self):
+        sentence = ""
+        for vis_text in self.vis_text_result:
+            sentence += (" " + vis_text.toPlainText())
+        self.result_signal.emit(sentence, self.configs, 'original')
+        self.close()
 
 
 if __name__ == '__main__':
@@ -139,7 +152,7 @@ if __name__ == '__main__':
                'text_region': [[3, 298], [133, 298], [133, 317], [3, 317]]}]
 
     app = QApplication(sys.argv)
-    win = VisResult(np_img=img, result=result)
+    win = VisResult(np_img=img, result=result, configs={})
     win.show()
 
     app.exec_()

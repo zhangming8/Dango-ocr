@@ -552,8 +552,10 @@ class MainInterface(QMainWindow):
         self.translateText.setFont(self.Font)
 
         if "original" in signal_list or "error" in signal_list:
-            # self.vis_res = VisResult(np_img=self.image, result=result_with_location)
-            # self.vis_res.show()
+            if data["vis_result"] == "True":
+                self.vis_res = VisResult(np_img=self.image, result=result_with_location, configs=data)
+                self.vis_res.result_signal.connect(self.display_modify_text)
+                self.vis_res.show()
             self.creat_thread(None, original, data, "original")
 
     # 将翻译结果打印
@@ -573,6 +575,17 @@ class MainInterface(QMainWindow):
             self.thread_state -= 1  # 线程结束，减少线程数
         except Exception:
             write_error(format_exc())
+
+    # 将翻译结果打印
+    def display_modify_text(self, result, data, translate_type):
+        self.translateText.clear()
+        if data["showColorType"] == "False":
+            self.format.setTextOutline(
+                QPen(QColor(data["fontColor"][translate_type]), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+            self.translateText.mergeCurrentCharFormat(self.format)
+            self.translateText.append(result)
+        else:
+            self.translateText.append("<font color=%s>%s</font>" % (data["fontColor"][translate_type], result))
 
     # 语音朗读
     def play_voice(self):

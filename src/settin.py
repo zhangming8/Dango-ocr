@@ -30,6 +30,7 @@ class SettinInterface(QWidget):
     def setupUi(self):
 
         # 窗口尺寸及不可拉伸
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.resize(404 * self.rate, 576 * self.rate)
         self.setMinimumSize(QtCore.QSize(404 * self.rate, 576 * self.rate))
         self.setMaximumSize(QtCore.QSize(404 * self.rate, 576 * self.rate))
@@ -85,10 +86,17 @@ class SettinInterface(QWidget):
         self.language_comboBox.setStyleSheet("background: rgba(255, 255, 255, 0.4);")
         self.language_comboBox.setCurrentIndex(self.language)
 
+        # 是否显示识别结果checkBox
+        self.vis_result_checkBox = QtWidgets.QCheckBox(self.tab_2)
+        self.vis_result_checkBox.setGeometry(
+            QtCore.QRect(30 * self.rate, 52 * self.rate, 231 * self.rate, 16 * self.rate))
+        self.vis_result_checkBox.setChecked(self.vis_result)
+        self.vis_result_checkBox.setText("可视化结果(可以对识别结果进行修改)")
+
         # 自动复制到剪贴板checkBox
         self.Clipboard_checkBox = QtWidgets.QCheckBox(self.tab_2)
         self.Clipboard_checkBox.setGeometry(
-            QtCore.QRect(30 * self.rate, 60 * self.rate, 231 * self.rate, 16 * self.rate))
+            QtCore.QRect(30 * self.rate, 73 * self.rate, 231 * self.rate, 16 * self.rate))
         self.Clipboard_checkBox.setChecked(self.showClipboard)
         self.Clipboard_checkBox.setText("识别结果自动复制到剪贴板")
 
@@ -252,6 +260,12 @@ class SettinInterface(QWidget):
         else:
             self.showClipboard = False
 
+        self.vis_result = self.data.get("vis_result", False)
+        if self.vis_result == "True":
+            self.vis_result = True
+        else:
+            self.vis_result = False
+
         # 所有可设置的快捷键
         self.HotKeys = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
                         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -317,6 +331,13 @@ class SettinInterface(QWidget):
             self.showClipboard = "False"
         self.data["showClipboard"] = self.showClipboard
 
+    def VisResult_state(self):
+        if self.vis_result_checkBox.isChecked():
+            self.vis_result = "True"
+        else:
+            self.vis_result = "False"
+        self.data["vis_result"] = self.vis_result
+
     def showHotKey1_state(self):  # 是否启用翻译键快捷键
 
         if self.shortcutKey1_checkBox.isChecked():
@@ -372,6 +393,7 @@ class SettinInterface(QWidget):
 
         self.showOriginal_state()
         self.showClipboard_state()
+        self.VisResult_state()
 
         self.save_language()
 
