@@ -31,10 +31,10 @@ def pixmap_to_array(pixmap, channels_count=4):
 
 # 截图
 def image_cut(data):
-    x1 = data["range"]['X1']
-    y1 = data["range"]['Y1']
-    x2 = data["range"]['X2']
-    y2 = data["range"]['Y2']
+    x1 = data["range"]['X1'] + 2  # 不截虚线框
+    y1 = data["range"]['Y1'] + 2
+    x2 = data["range"]['X2'] - 2
+    y2 = data["range"]['Y2'] - 2
 
     image = None
     try:

@@ -5,12 +5,16 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap
 
+from time import localtime, time, strftime
+from docx import Document
 import numpy as np
-from cv2 import imread, cvtColor, COLOR_BGR2RGB
+from traceback import format_exc
+from cv2 import imread, cvtColor, COLOR_BGR2RGB, imwrite
 import sys
 
 sys.path.append(".")
 from configs import folder_path
+from src.api import write_error
 
 
 class VisResult(QWidget):
@@ -23,8 +27,9 @@ class VisResult(QWidget):
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setWindowTitle("修改识别结果")
 
+        self.np_img = np_img
         self.results = result
-        img = cvtColor(np_img, COLOR_BGR2RGB)
+        img = cvtColor(self.np_img, COLOR_BGR2RGB)
         img_h, img_w, img_c = img.shape
         self.img_w = img_w
 
@@ -59,6 +64,7 @@ class VisResult(QWidget):
         self.SaveButton.setGeometry(QtCore.QRect(img_show_w - 45, img_show_h + 20, 90, 30))
         self.SaveButton.setStyleSheet("background: rgba(255, 255, 255, 0.4);font: 12pt;")
         self.SaveButton.setText("导 出")
+        self.SaveButton.clicked.connect(self.save_text)
 
         # 设置返回按钮
         self.CancelButton = QtWidgets.QPushButton(self)
@@ -126,6 +132,27 @@ class VisResult(QWidget):
             sentence += (" " + vis_text.toPlainText())
         self.result_signal.emit(sentence, self.configs, 'original')
         self.close()
+
+    def save_text(self):
+        try:
+            time_array = localtime(int(time()))
+            str_date = strftime("DangoOCR_%Y-%m-%d-%H-%M-%S", time_array)
+            default_name = folder_path + "/" + str_date
+            filename = QFileDialog.getSaveFileName(self, 'save file', default_name, "txt (*.txt);;docx (*.docx)")
+
+            if '.txt' in filename[1]:
+                imwrite(filename[0][:-4] + ".jpg", self.np_img)
+                with open(filename[0], 'w', encoding='utf-8') as f:
+                    for vis_text in self.vis_text_result:
+                        f.write(vis_text.toPlainText() + "\n")
+            elif '.docx' in filename[1]:
+                imwrite(filename[0][:-5] + ".jpg", self.np_img)
+                document = Document()
+                for vis_text in self.vis_text_result:
+                    document.add_paragraph(vis_text.toPlainText())
+                document.save(filename[0])
+        except Exception:
+            write_error(format_exc())
 
 
 if __name__ == '__main__':

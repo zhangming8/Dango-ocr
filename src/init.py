@@ -144,7 +144,7 @@ class MainInterface(QMainWindow):
         self.RangeButton = QPushButton(qticon('fa.crop', color='white'), "", self)
         self.RangeButton.setIconSize(QSize(20, 20))
         self.RangeButton.setGeometry(QRect(193 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
-        self.RangeButton.setToolTip('<b>范围 Range</b><br>框选要翻译的区域<br>需从左上到右下拖动')
+        self.RangeButton.setToolTip('<b>截图范围 ScreenShot Range</b><br>框选要识别的区域')
         self.RangeButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
         self.RangeButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.RangeButton.hide()
@@ -153,7 +153,7 @@ class MainInterface(QMainWindow):
         self.StartButton = QPushButton(qticon('fa.play', color='white'), "", self)
         self.StartButton.setIconSize(QSize(20, 20))
         self.StartButton.setGeometry(QRect(233 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
-        self.StartButton.setToolTip('<b>翻译 Translate</b><br>点击翻译（手动）<br>开始/停止（自动）')
+        self.StartButton.setToolTip('<b>识别 Recognize</b><br>点击开始（手动）<br>开始/停止（自动）')
         self.StartButton.setStyleSheet("background: transparent")
         self.StartButton.clicked.connect(self.start_login)
         self.StartButton.setCursor(QCursor(Qt.PointingHandCursor))
@@ -182,7 +182,7 @@ class MainInterface(QMainWindow):
         # 翻译模式按钮
         self.switchBtn = SwitchBtn(self)
         self.switchBtn.setGeometry(353 * self.rate, 5 * self.rate, 50 * self.rate, 20 * self.rate)
-        self.switchBtn.setToolTip('<b>模式 Mode</b><br>手动翻译/自动翻译')
+        self.switchBtn.setToolTip('<b>模式 Mode</b><br>手动识别/自动识别')
         self.switchBtn.checkedChanged.connect(self.getState)
         self.switchBtn.setCursor(QCursor(Qt.PointingHandCursor))
         self.switchBtn.hide()
@@ -194,7 +194,7 @@ class MainInterface(QMainWindow):
         self.languageText = QPushButton(self)
         self.languageText.setIconSize(QSize(20, 20))
         self.languageText.setGeometry(QRect(423 * self.rate, 5 * self.rate, 45 * self.rate, 20 * self.rate))
-        self.languageText.setToolTip('<b>待识别的语言类型</b>')
+        self.languageText.setToolTip('<b>待识别的原文类型 </b><br>Original Language Type')
         self.languageText.setStyleSheet("border-width:0;\
                                                   border-style:outset;\
                                                   border-top:0px solid #e8f3f9;\

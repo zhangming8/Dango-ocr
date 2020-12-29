@@ -91,7 +91,7 @@ class SettinInterface(QWidget):
         self.vis_result_checkBox.setGeometry(
             QtCore.QRect(30 * self.rate, 52 * self.rate, 231 * self.rate, 16 * self.rate))
         self.vis_result_checkBox.setChecked(self.vis_result)
-        self.vis_result_checkBox.setText("可视化结果(可以对识别结果进行修改)")
+        self.vis_result_checkBox.setText("可视化识别结果(可以对识别结果进行修改)")
 
         # 自动复制到剪贴板checkBox
         self.Clipboard_checkBox = QtWidgets.QCheckBox(self.tab_2)
