@@ -96,13 +96,16 @@ def compare_image(imageA, imageB):
 def translate(window, data, use_translate_signal):
     text = window.translateText.toPlainText()
 
-    if "欢迎~ 么么哒~" in text[:10] or (not text[:1]):
-        score = 0.1
-        window.image = image_cut(data)
+    if window.load_local_img:
+        score = 0.2
     else:
-        image_last = window.image
-        window.image = image_cut(data)
-        score = compare_image(image_last, window.image)
+        if "欢迎~ 么么哒~" in text[:10] or (not text[:1]):
+            score = 0.1
+            window.image = image_cut(data)
+        else:
+            image_last = window.image
+            window.image = image_cut(data)
+            score = compare_image(image_last, window.image)
 
     if config.debug:
         print("图片相似性: {}, 设置的阈值: {}".format(score, config.similarity_score))
@@ -117,6 +120,11 @@ def translate(window, data, use_translate_signal):
 
         # 原文相似度
         str_score = get_equal_rate(original, window.original)
+
+        if window.load_local_img and sign:
+            window.load_local_img = False
+            str_score = 0
+            window.original = ''
 
         if sign and original and (original != window.original) and str_score < 0.95:
 

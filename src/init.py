@@ -8,6 +8,8 @@ from json import load, dump
 from traceback import format_exc
 from pyperclip import copy
 from threading import Thread
+from cv2 import imread
+from os.path import dirname
 
 from src.translate import TranslateThread
 from src.switch import SwitchBtn
@@ -67,6 +69,8 @@ class MainInterface(QMainWindow):
         self._bottom_rect = []
         self._corner_rect = []
         self.image = None
+        self.load_local_img = False
+        self.load_local_img_path = folder_path
 
     def init_ui(self):
 
@@ -144,12 +148,12 @@ class MainInterface(QMainWindow):
         self.RangeButton = QPushButton(qticon('fa.crop', color='white'), "", self)
         self.RangeButton.setIconSize(QSize(20, 20))
         self.RangeButton.setGeometry(QRect(193 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
-        self.RangeButton.setToolTip('<b>截图范围 ScreenShot Range</b><br>框选要识别的区域')
+        self.RangeButton.setToolTip('<b>截屏识别图片 ScreenShot Range</b><br>框选要识别的区域')
         self.RangeButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
         self.RangeButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.RangeButton.hide()
 
-        # 翻译按钮
+        # 运行按钮
         self.StartButton = QPushButton(qticon('fa.play', color='white'), "", self)
         self.StartButton.setIconSize(QSize(20, 20))
         self.StartButton.setGeometry(QRect(233 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
@@ -159,10 +163,20 @@ class MainInterface(QMainWindow):
         self.StartButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.StartButton.hide()
 
+        # 手动打开文件按钮
+        self.OpenButton = QPushButton(qticon('fa.folder-open-o', color='white'), "", self)
+        self.OpenButton.setIconSize(QSize(20, 20))
+        self.OpenButton.setGeometry(QRect(273 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+        self.OpenButton.setToolTip('<b>打开识别图片 Open image</b><br> 识别本地图片')
+        self.OpenButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
+        self.OpenButton.setCursor(QCursor(Qt.PointingHandCursor))
+        self.OpenButton.clicked.connect(self.open_image)
+        self.OpenButton.hide()
+
         # 复制按钮
         self.CopyButton = QPushButton(qticon('fa.copy', color='white'), "", self)
         self.CopyButton.setIconSize(QSize(20, 20))
-        self.CopyButton.setGeometry(QRect(273 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+        self.CopyButton.setGeometry(QRect(313 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.CopyButton.setToolTip('<b>复制 Copy</b><br>将当前识别到的文本<br>复制至剪贴板')
         self.CopyButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
         self.CopyButton.setCursor(QCursor(Qt.PointingHandCursor))
@@ -172,7 +186,7 @@ class MainInterface(QMainWindow):
         # 朗读原文按钮
         self.playVoiceButton = QPushButton(qticon('fa.music', color='white'), "", self)
         self.playVoiceButton.setIconSize(QSize(20, 20))
-        self.playVoiceButton.setGeometry(QRect(313 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+        self.playVoiceButton.setGeometry(QRect(353 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.playVoiceButton.setToolTip('<b>朗读原文 Play Voice</b><br>朗读识别到的原文')
         self.playVoiceButton.setStyleSheet("background: transparent")
         self.playVoiceButton.clicked.connect(self.play_voice)
@@ -181,7 +195,7 @@ class MainInterface(QMainWindow):
 
         # 翻译模式按钮
         self.switchBtn = SwitchBtn(self)
-        self.switchBtn.setGeometry(353 * self.rate, 5 * self.rate, 50 * self.rate, 20 * self.rate)
+        self.switchBtn.setGeometry(393 * self.rate, 5 * self.rate, 50 * self.rate, 20 * self.rate)
         self.switchBtn.setToolTip('<b>模式 Mode</b><br>手动识别/自动识别')
         self.switchBtn.checkedChanged.connect(self.getState)
         self.switchBtn.setCursor(QCursor(Qt.PointingHandCursor))
@@ -193,7 +207,7 @@ class MainInterface(QMainWindow):
         languageFont.setPointSize(10)
         self.languageText = QPushButton(self)
         self.languageText.setIconSize(QSize(20, 20))
-        self.languageText.setGeometry(QRect(423 * self.rate, 5 * self.rate, 45 * self.rate, 20 * self.rate))
+        self.languageText.setGeometry(QRect(463 * self.rate, 5 * self.rate, 45 * self.rate, 20 * self.rate))
         self.languageText.setToolTip('<b>待识别的原文类型 </b><br>Original Language Type')
         self.languageText.setStyleSheet("border-width:0;\
                                                   border-style:outset;\
@@ -208,7 +222,7 @@ class MainInterface(QMainWindow):
         # 设置按钮
         self.SettinButton = QPushButton(qticon('fa.cog', color='white'), "", self)
         self.SettinButton.setIconSize(QSize(20, 20))
-        self.SettinButton.setGeometry(QRect(478 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+        self.SettinButton.setGeometry(QRect(518 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.SettinButton.setToolTip('<b>设置 Settin</b>')
         self.SettinButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
         self.SettinButton.setCursor(QCursor(Qt.PointingHandCursor))
@@ -217,7 +231,7 @@ class MainInterface(QMainWindow):
         # 锁按钮
         self.LockButton = QPushButton(qticon('fa.lock', color='white'), "", self)
         self.LockButton.setIconSize(QSize(20, 20))
-        self.LockButton.setGeometry(QRect(522 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+        self.LockButton.setGeometry(QRect(562 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.LockButton.setToolTip('<b>锁定翻译界面 Lock</b>')
         self.LockButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
         self.LockButton.setCursor(QCursor(Qt.PointingHandCursor))
@@ -227,7 +241,7 @@ class MainInterface(QMainWindow):
         # 最小化按钮
         self.MinimizeButton = QPushButton(qticon('fa.minus', color='white'), "", self)
         self.MinimizeButton.setIconSize(QSize(20, 20))
-        self.MinimizeButton.setGeometry(QRect(562 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+        self.MinimizeButton.setGeometry(QRect(602 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.MinimizeButton.setToolTip('<b>最小化 Minimize</b>')
         self.MinimizeButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
         self.MinimizeButton.setCursor(QCursor(Qt.PointingHandCursor))
@@ -237,7 +251,7 @@ class MainInterface(QMainWindow):
         # 退出按钮
         self.QuitButton = QPushButton(qticon('fa.times', color='white'), "", self)
         self.QuitButton.setIconSize(QSize(20, 20))
-        self.QuitButton.setGeometry(QRect(602 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+        self.QuitButton.setGeometry(QRect(642 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.QuitButton.setToolTip('<b>退出程序 Quit</b>')
         self.QuitButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
         self.QuitButton.setCursor(QCursor(Qt.PointingHandCursor))
@@ -435,6 +449,7 @@ class MainInterface(QMainWindow):
             self.StartButton.show()
             self.SettinButton.show()
             self.RangeButton.show()
+            self.OpenButton.show()
             self.CopyButton.show()
             self.QuitButton.show()
             self.MinimizeButton.show()
@@ -465,17 +480,18 @@ class MainInterface(QMainWindow):
             height = self.height() - 30
 
             self.RangeButton.setGeometry(QRect(width - 20 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
-            self.StartButton.setGeometry(QRect(width + 20, 5 * self.rate, 20 * self.rate, 20 * self.rate))
-            self.CopyButton.setGeometry(QRect(width + 60 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
-            self.playVoiceButton.setGeometry(QRect(width + 100 * self.rate, 5 * self.rate, 20 * self.rate,
+            self.StartButton.setGeometry(QRect(width + 20 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+            self.OpenButton.setGeometry(QRect(width + 60 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+            self.CopyButton.setGeometry(QRect(width + 100 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+            self.playVoiceButton.setGeometry(QRect(width + 140 * self.rate, 5 * self.rate, 20 * self.rate,
                                                    20 * self.rate))
-            self.switchBtn.setGeometry(QRect(width + 140 * self.rate, 5 * self.rate, 50 * self.rate, 20 * self.rate))
-            self.languageText.setGeometry(width + 210 * self.rate, 5 * self.rate, 45 * self.rate, 20 * self.rate)
-            self.SettinButton.setGeometry(QRect(width + 265 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
-            self.LockButton.setGeometry(QRect(width + 305 * self.rate, 5 * self.rate, 24 * self.rate, 20 * self.rate))
+            self.switchBtn.setGeometry(QRect(width + 180 * self.rate, 5 * self.rate, 50 * self.rate, 20 * self.rate))
+            self.languageText.setGeometry(width + 250 * self.rate, 5 * self.rate, 45 * self.rate, 20 * self.rate)
+            self.SettinButton.setGeometry(QRect(width + 305 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+            self.LockButton.setGeometry(QRect(width + 345 * self.rate, 5 * self.rate, 24 * self.rate, 20 * self.rate))
             self.MinimizeButton.setGeometry(
-                QRect(width + 349 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
-            self.QuitButton.setGeometry(QRect(width + 389 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+                QRect(width + 389 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
+            self.QuitButton.setGeometry(QRect(width + 429 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
             self.translateText.setGeometry(0, 30 * self.rate, self.width(), height * self.rate)
 
             # 隐藏所有顶部工具栏控件
@@ -483,6 +499,7 @@ class MainInterface(QMainWindow):
             self.StartButton.hide()
             self.SettinButton.hide()
             self.RangeButton.hide()
+            self.OpenButton.hide()
             self.CopyButton.hide()
             self.QuitButton.hide()
             self.MinimizeButton.hide()
@@ -609,6 +626,16 @@ class MainInterface(QMainWindow):
         with open(folder_path + "/config/识别结果.txt", "a+", encoding="utf-8") as file:
             file.write(content)
 
+    def open_image(self):
+        file_choose, file_type = QFileDialog.getOpenFileName(self, "选取文件", self.load_local_img_path,
+                                                             "jpg (*.jpg);; png (*.png);; jpeg (*.jpeg);;All Files (*)")
+        img = imread(file_choose)
+        self.load_local_img_path = dirname(file_choose)
+        if img is not None:
+            self.image = img
+            self.load_local_img = True
+            self.start_login()
+
 
 if __name__ == '__main__':
     import sys
@@ -616,5 +643,6 @@ if __name__ == '__main__':
     screen_scale_rate = get_screen_rate()
     App = QApplication(sys.argv)
     Init = MainInterface(screen_scale_rate, "ming")
+    Init.QuitButton.clicked.connect(Init.close)
     Init.show()
     App.exit(App.exec_())

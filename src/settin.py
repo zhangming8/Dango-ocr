@@ -48,7 +48,7 @@ class SettinInterface(QWidget):
 
         # 窗口图标
         self.icon = QtGui.QIcon()
-        self.icon.addPixmap(QtGui.QPixmap(folder_path+"/config/logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        self.icon.addPixmap(QtGui.QPixmap(folder_path + "/config/logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
         self.setWindowIcon(self.icon)
 
         # 顶部工具栏
@@ -68,7 +68,7 @@ class SettinInterface(QWidget):
         # 工具栏2
         self.tab_2 = QtWidgets.QWidget()
         self.tabWidget.addTab(self.tab_2, "")
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "翻译源设定")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "设置")
 
         # 翻译语种标签
         self.translateSource_label_6 = QtWidgets.QLabel(self.tab_2)
@@ -89,9 +89,9 @@ class SettinInterface(QWidget):
         # 是否显示识别结果checkBox
         self.vis_result_checkBox = QtWidgets.QCheckBox(self.tab_2)
         self.vis_result_checkBox.setGeometry(
-            QtCore.QRect(30 * self.rate, 52 * self.rate, 231 * self.rate, 16 * self.rate))
+            QtCore.QRect(30 * self.rate, 52 * self.rate, 250 * self.rate, 16 * self.rate))
         self.vis_result_checkBox.setChecked(self.vis_result)
-        self.vis_result_checkBox.setText("可视化识别结果(可以对识别结果进行修改)")
+        self.vis_result_checkBox.setText("可视化识别结果(对识别结果进行修改及导出)")
 
         # 自动复制到剪贴板checkBox
         self.Clipboard_checkBox = QtWidgets.QCheckBox(self.tab_2)
@@ -191,7 +191,8 @@ class SettinInterface(QWidget):
 
         # 翻译框透明度设定
         self.horizontalSlider = QtWidgets.QSlider(self.tab_2)
-        self.horizontalSlider.setGeometry(QtCore.QRect(30 * self.rate, 400 * self.rate, 347 * self.rate, 22 * self.rate))
+        self.horizontalSlider.setGeometry(
+            QtCore.QRect(30 * self.rate, 400 * self.rate, 347 * self.rate, 22 * self.rate))
         self.horizontalSlider.setStyleSheet("background: transparent;")
         self.horizontalSlider.setMaximum(100)
         self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
@@ -227,7 +228,7 @@ class SettinInterface(QWidget):
 
     def get_settin(self):  # 获取所有预设值
 
-        with open(folder_path+'/config/settin.json') as file:
+        with open(folder_path + '/config/settin.json') as file:
             self.data = load(file)
 
         # 获取各翻译源颜色预设值
@@ -274,6 +275,23 @@ class SettinInterface(QWidget):
                         'Back', 'Tab', 'Space', 'Left', 'Up', 'Right', 'Down', 'Delete',
                         'Numpad0', 'Numpad1', 'Numpad2', 'Numpad3', 'Numpad4', 'Numpad5', 'Numpad6', 'Numpad7',
                         'Numpad8', 'Numpad9']
+        self.QtHotKeys = [QtCore.Qt.Key_F1, QtCore.Qt.Key_F2, QtCore.Qt.Key_F3, QtCore.Qt.Key_F4, QtCore.Qt.Key_F5,
+                          QtCore.Qt.Key_F6, QtCore.Qt.Key_F7, QtCore.Qt.Key_F8, QtCore.Qt.Key_F9, QtCore.Qt.Key_F10,
+                          QtCore.Qt.Key_F11, QtCore.Qt.Key_F12, QtCore.Qt.Key_A, QtCore.Qt.Key_B, QtCore.Qt.Key_C,
+                          QtCore.Qt.Key_D, QtCore.Qt.Key_E, QtCore.Qt.Key_F, QtCore.Qt.Key_G, QtCore.Qt.Key_H,
+                          QtCore.Qt.Key_I, QtCore.Qt.Key_J, QtCore.Qt.Key_K, QtCore.Qt.Key_L, QtCore.Qt.Key_M,
+                          QtCore.Qt.Key_N, QtCore.Qt.Key_O, QtCore.Qt.Key_P, QtCore.Qt.Key_Q, QtCore.Qt.Key_R,
+                          QtCore.Qt.Key_S, QtCore.Qt.Key_T, QtCore.Qt.Key_U, QtCore.Qt.Key_V, QtCore.Qt.Key_W,
+                          QtCore.Qt.Key_X, QtCore.Qt.Key_Y, QtCore.Qt.Key_Z, QtCore.Qt.Key_0, QtCore.Qt.Key_1,
+                          QtCore.Qt.Key_2, QtCore.Qt.Key_3, QtCore.Qt.Key_4, QtCore.Qt.Key_5, QtCore.Qt.Key_6,
+                          QtCore.Qt.Key_7, QtCore.Qt.Key_8, QtCore.Qt.Key_9, QtCore.Qt.Key_Back, QtCore.Qt.Key_Tab,
+                          QtCore.Qt.Key_Space, QtCore.Qt.Key_Left, QtCore.Qt.Key_Up, QtCore.Qt.Key_Right,
+                          QtCore.Qt.Key_Down, QtCore.Qt.Key_Delete, QtCore.Qt.Key_0, QtCore.Qt.Key_1, QtCore.Qt.Key_2,
+                          QtCore.Qt.Key_3, QtCore.Qt.Key_4, QtCore.Qt.Key_5, QtCore.Qt.Key_6, QtCore.Qt.Key_7,
+                          QtCore.Qt.Key_8, QtCore.Qt.Key_9]
+        self.QtHotKeysMaps = {}
+        for idx in range(len(self.HotKeys)):
+            self.QtHotKeysMaps[self.HotKeys[idx]] = self.QtHotKeys[idx]
 
         # 获取翻译键快捷键的热键预设值
         self.showHotKey1Value1 = self.data["showHotKeyValue1"]
@@ -365,7 +383,7 @@ class SettinInterface(QWidget):
 
     def range(self):
 
-        with open(folder_path+'/config/settin.json') as file:
+        with open(folder_path + '/config/settin.json') as file:
             data1 = load(file)
 
             self.data["range"]["X1"] = data1["range"]["X1"]
@@ -402,7 +420,7 @@ class SettinInterface(QWidget):
         self.save_showHotKeyValue1()
         self.save_showHotKeyValue2()
 
-        with open(folder_path+'/config/settin.json', 'w') as file:
+        with open(folder_path + '/config/settin.json', 'w') as file:
             dump(self.data, file, indent=2)
 
         MessageBox('保存设置', '保存成功啦 ヾ(๑╹◡╹)ﾉ"')

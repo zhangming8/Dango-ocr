@@ -130,6 +130,10 @@ class WScreenShot(QWidget):
         except Exception:
             write_error(format_exc())
 
+    def keyPressEvent(self, QKeyEvent):
+        if QKeyEvent.key() == Qt.Key_Escape:
+            self.close()
+
 
 if __name__ == '__main__':
     from src.init import MainInterface

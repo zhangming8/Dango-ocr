@@ -13,13 +13,13 @@
   "showHotKey2": "True",
   "fontType": "\u534e\u5eb7\u65b9\u5706\u4f53W7",
   "range": {
-    "X2": 537,
-    "Y2": 239,
-    "X1": 192,
-    "Y1": 173
+    "X2": 597,
+    "Y2": 341,
+    "X1": 266,
+    "Y1": 224
   },
   "showHotKeyValue1": "F3",
-  "showClipboard": "True",
+  "showClipboard": "False",
   "language": "CH",
   "sign": 1,
   "showHotKey1": "True"

@@ -134,6 +134,19 @@ class Translater():
             if not self.thread_hotKey.isAlive():
                 self.thread_hotKey.start()
 
+    def keyPressEvent(self, QKeyEvent):
+
+        if QKeyEvent.key() == self.Settin.QtHotKeysMaps[self.data["showHotKeyValue2"]] and self.data[
+            "showHotKey2"] == "True":
+            self.goto_range()
+
+        if QKeyEvent.key() == self.Settin.QtHotKeysMaps[self.data["showHotKeyValue1"]] and self.data[
+            "showHotKey1"] == "True":
+            self.Init.start_login()
+
+        # if QKeyEvent.modifiers() == Qt.ControlModifier | Qt.ShiftModifier and QKeyEvent.key() == Qt.Key_A:  # 三键组合
+        #     print('按下了Ctrl+Shift+A键')
+
     # 登录成功后
     def Login_success(self):
         try:
@@ -148,6 +161,9 @@ class Translater():
                 self.thread_hotKey = Thread(target=self.hotKey.start)
                 self.thread_hotKey.setDaemon(True)
                 self.thread_hotKey.start()
+            else:
+                # 在mac/ubuntu上用qt自己的热键, 但是不支持全局热键
+                self.Init.keyPressEvent = self.keyPressEvent
 
             # 点击设置键后执行的函数
             self.Init.SettinButton.clicked.connect(self.goto_settin)
