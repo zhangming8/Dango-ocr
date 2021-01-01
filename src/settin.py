@@ -89,7 +89,7 @@ class SettinInterface(QWidget):
         # 是否显示识别结果checkBox
         self.vis_result_checkBox = QtWidgets.QCheckBox(self.tab_2)
         self.vis_result_checkBox.setGeometry(
-            QtCore.QRect(30 * self.rate, 52 * self.rate, 250 * self.rate, 16 * self.rate))
+            QtCore.QRect(30 * self.rate, 52 * self.rate, 300 * self.rate, 16 * self.rate))
         self.vis_result_checkBox.setChecked(self.vis_result)
         self.vis_result_checkBox.setText("可视化识别结果(对识别结果进行修改及导出)")
 

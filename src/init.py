@@ -71,6 +71,7 @@ class MainInterface(QMainWindow):
         self.image = None
         self.load_local_img = False
         self.load_local_img_path = folder_path
+        self.save_result_path = [folder_path]  # 写成list, 传入方式为引用, 便于修改
 
     def init_ui(self):
 
@@ -570,7 +571,8 @@ class MainInterface(QMainWindow):
 
         if "original" in signal_list or "error" in signal_list:
             if data["vis_result"] == "True":
-                self.vis_res = VisResult(np_img=self.image, result=result_with_location, configs=data)
+                self.vis_res = VisResult(np_img=self.image, result=result_with_location, configs=data,
+                                         save_path=self.save_result_path)
                 self.vis_res.result_signal.connect(self.display_modify_text)
                 self.vis_res.show()
             self.creat_thread(None, original, data, "original")
@@ -630,8 +632,8 @@ class MainInterface(QMainWindow):
         file_choose, file_type = QFileDialog.getOpenFileName(self, "选取文件", self.load_local_img_path,
                                                              "jpg (*.jpg);; png (*.png);; jpeg (*.jpeg);;All Files (*)")
         img = imread(file_choose)
-        self.load_local_img_path = dirname(file_choose)
         if img is not None:
+            self.load_local_img_path = dirname(file_choose)
             self.image = img
             self.load_local_img = True
             self.start_login()

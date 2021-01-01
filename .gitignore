@@ -1,4 +1,11 @@
 # Byte-compiled / optimized / DLL files
+
+
+*.rar
+*.zip
+*.tar.gz
+
+*.TTC
 .idea/
 config/image.jpg
 config/voice.mp3

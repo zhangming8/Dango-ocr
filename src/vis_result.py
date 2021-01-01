@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap
 
+from os.path import dirname
 from time import localtime, time, strftime
 from docx import Document
 import numpy as np
@@ -20,7 +21,7 @@ from src.api import write_error
 class VisResult(QWidget):
     result_signal = pyqtSignal(str, dict, str)
 
-    def __init__(self, np_img, result, configs):
+    def __init__(self, np_img, result, configs, save_path):
         super(VisResult, self).__init__()
         self.setWindowState(Qt.WindowActive)
         # 窗口置顶
@@ -74,6 +75,7 @@ class VisResult(QWidget):
         self.CancelButton.clicked.connect(self.close)
 
         self.configs = configs
+        self.default_save_path = save_path
 
     # 绘制事件
     def paintEvent(self, event):
@@ -136,27 +138,34 @@ class VisResult(QWidget):
     def save_text(self):
         try:
             time_array = localtime(int(time()))
-            str_date = strftime("DangoOCR_%Y-%m-%d-%H-%M-%S", time_array)
-            default_name = folder_path + "/" + str_date
-            filename = QFileDialog.getSaveFileName(self, 'save file', default_name, "txt (*.txt);;docx (*.docx)")
+            str_date = strftime("DangoOCR_%Y-%m-%d_%H-%M-%S", time_array)
+            default_name = self.default_save_path[0] + "/" + str_date
+            save_p, extend = QFileDialog.getSaveFileName(self, 'save file', default_name, "txt (*.txt);;docx (*.docx)")
 
-            if '.txt' in filename[1]:
-                imwrite(filename[0][:-4] + ".jpg", self.np_img)
-                with open(filename[0], 'w', encoding='utf-8') as f:
+            if '.txt' in extend:
+                if save_p[-4:] != '.txt':
+                    save_p += '.txt'
+                imwrite(save_p[:-4] + ".jpg", self.np_img)
+                with open(save_p, 'w', encoding='utf-8') as f:
                     for vis_text in self.vis_text_result:
                         f.write(vis_text.toPlainText() + "\n")
-            elif '.docx' in filename[1]:
-                imwrite(filename[0][:-5] + ".jpg", self.np_img)
+            elif '.docx' in extend:
+                if save_p[-5:] != '.docx':
+                    save_p += '.docx'
+                imwrite(save_p[:-5] + ".jpg", self.np_img)
                 document = Document()
                 for vis_text in self.vis_text_result:
                     document.add_paragraph(vis_text.toPlainText())
-                document.save(filename[0])
+                document.save(save_p)
+            if save_p != '':
+                self.default_save_path[0] = dirname(save_p)
         except Exception:
             write_error(format_exc())
 
 
 if __name__ == '__main__':
     img = imread(folder_path + '/config/image.jpg')
+    print(folder_path)
     result = [{'text': '钢琴家傅聪确诊新冠系傅雷之子', 'confidence': 0.9817190170288086,
                'text_region': [[4, 12], [205, 11], [205, 28], [4, 29]]},
               {'text': '中英间定期客运航线航班暂停运行', 'confidence': 0.9990035891532898,
@@ -179,7 +188,7 @@ if __name__ == '__main__':
                'text_region': [[3, 298], [133, 298], [133, 317], [3, 317]]}]
 
     app = QApplication(sys.argv)
-    win = VisResult(np_img=img, result=result, configs={})
+    win = VisResult(np_img=img, result=result, configs={}, save_path=[folder_path])
     win.show()
 
     app.exec_()
