@@ -1,8 +1,8 @@
 import sys
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
+from PyQt5.QtGui import QFont, QColor, QLinearGradient, QPainter, QPainterPath
+from PyQt5.QtCore import QRect, Qt, pyqtSignal, QTimer, QRectF
 
 
 class SwitchBtn(QWidget):

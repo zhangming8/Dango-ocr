@@ -7,9 +7,9 @@ from traceback import format_exc
 from cv2 import imencode
 from time import time, localtime, strftime
 
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-from PyQt5 import QtGui
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMessageBox, QPushButton
+from PyQt5.QtGui import QIcon, QPixmap
 
 from configs import Config, folder_path
 
@@ -42,8 +42,8 @@ def MessageBox(title, text):
     messageBox = QMessageBox()
     messageBox.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.WindowMaximizeButtonHint | Qt.MSWindowsFixedSizeDialogHint)
     # 窗口图标
-    icon = QtGui.QIcon()
-    icon.addPixmap(QtGui.QPixmap(folder_path + "/config/logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+    icon = QIcon()
+    icon.addPixmap(QPixmap(folder_path + "/config/logo.ico"), QIcon.Normal, QIcon.On)
     messageBox.setWindowIcon(icon)
     # 设定窗口标题和内容
     messageBox.setWindowTitle(title)

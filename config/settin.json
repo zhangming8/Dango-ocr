@@ -4,19 +4,18 @@
     "caiyunPrivate": "#ff0000",
     "original": "#d93636"
   },
-  "BingLanguage": "ja",
   "horizontal": 0,
   "showOriginal": "True",
-  "vis_result": "False",
+  "vis_result": "True",
   "showHotKeyValue2": "F2",
   "fontSize": 15,
   "showHotKey2": "True",
   "fontType": "\u534e\u5eb7\u65b9\u5706\u4f53W7",
   "range": {
-    "X2": 597,
-    "Y2": 341,
-    "X1": 266,
-    "Y1": 224
+    "X2": 549,
+    "Y2": 635,
+    "X1": 207,
+    "Y1": 546
   },
   "showHotKeyValue1": "F3",
   "showClipboard": "False",

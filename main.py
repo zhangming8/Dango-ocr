@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from PyQt5.QtWidgets import *
 from json import load, dump
 from qtawesome import icon as qticon
 from traceback import format_exc
 from threading import Thread
+
+from PyQt5.QtWidgets import QApplication
 
 from src.init import MainInterface
 from src.range import WScreenShot

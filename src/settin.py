@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import *
-from PyQt5 import QtCore, QtGui, QtWidgets
 from json import dump, load
+
+from PyQt5.QtWidgets import QLabel, QPushButton, QApplication, QWidget, QColorDialog, QTabWidget, QComboBox, \
+    QCheckBox, QSpinBox, QFontComboBox, QToolButton, QSlider
+from PyQt5.QtGui import QIcon, QPixmap, QFont
+from PyQt5.QtCore import QSize, QRect, Qt
 
 from src.screen_rate import get_screen_rate
 from src.api import MessageBox
@@ -30,11 +33,11 @@ class SettinInterface(QWidget):
     def setupUi(self):
 
         # 窗口尺寸及不可拉伸
-        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.resize(404 * self.rate, 576 * self.rate)
-        self.setMinimumSize(QtCore.QSize(404 * self.rate, 576 * self.rate))
-        self.setMaximumSize(QtCore.QSize(404 * self.rate, 576 * self.rate))
-        self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
+        self.setMinimumSize(QSize(404 * self.rate, 576 * self.rate))
+        self.setMaximumSize(QSize(404 * self.rate, 576 * self.rate))
+        self.setWindowFlags(Qt.WindowMinimizeButtonHint)
 
         # 窗口标题
         self.setWindowTitle("设置")
@@ -47,13 +50,13 @@ class SettinInterface(QWidget):
         self.setStyleSheet("QWidget {""font: 9pt \"微软雅黑\"};")  # 华康方圆体W7
 
         # 窗口图标
-        self.icon = QtGui.QIcon()
-        self.icon.addPixmap(QtGui.QPixmap(folder_path + "/config/logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        self.icon = QIcon()
+        self.icon.addPixmap(QPixmap(folder_path + "/config/logo.ico"), QIcon.Normal, QIcon.On)
         self.setWindowIcon(self.icon)
 
         # 顶部工具栏
-        self.tabWidget = QtWidgets.QTabWidget(self)
-        self.tabWidget.setGeometry(QtCore.QRect(-2, 0, 410 * self.rate, 580 * self.rate))
+        self.tabWidget = QTabWidget(self)
+        self.tabWidget.setGeometry(QRect(-2, 0, 410 * self.rate, 580 * self.rate))
         self.tabWidget.setCurrentIndex(0)
 
         # 工具栏样式
@@ -66,20 +69,20 @@ class SettinInterface(QWidget):
                                      )
 
         # 工具栏2
-        self.tab_2 = QtWidgets.QWidget()
+        self.tab_2 = QWidget()
         self.tabWidget.addTab(self.tab_2, "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "设置")
 
         # 翻译语种标签
-        self.translateSource_label_6 = QtWidgets.QLabel(self.tab_2)
+        self.translateSource_label_6 = QLabel(self.tab_2)
         self.translateSource_label_6.setGeometry(
-            QtCore.QRect(30 * self.rate, 20 * self.rate, 151 * self.rate, 16 * self.rate))
+            QRect(30 * self.rate, 20 * self.rate, 151 * self.rate, 16 * self.rate))
         self.translateSource_label_6.setText("待识别的语言：")
 
         # 翻译语种comboBox
-        self.language_comboBox = QtWidgets.QComboBox(self.tab_2)
+        self.language_comboBox = QComboBox(self.tab_2)
         self.language_comboBox.setGeometry(
-            QtCore.QRect(195 * self.rate, 20 * self.rate, 131 * self.rate, 22 * self.rate))
+            QRect(195 * self.rate, 20 * self.rate, 131 * self.rate, 22 * self.rate))
         for idx, language_name in enumerate(config.language_name):
             self.language_comboBox.addItem("")
             self.language_comboBox.setItemText(idx, language_name[1])
@@ -87,79 +90,79 @@ class SettinInterface(QWidget):
         self.language_comboBox.setCurrentIndex(self.language)
 
         # 是否显示识别结果checkBox
-        self.vis_result_checkBox = QtWidgets.QCheckBox(self.tab_2)
+        self.vis_result_checkBox = QCheckBox(self.tab_2)
         self.vis_result_checkBox.setGeometry(
-            QtCore.QRect(30 * self.rate, 52 * self.rate, 300 * self.rate, 16 * self.rate))
+            QRect(30 * self.rate, 52 * self.rate, 300 * self.rate, 16 * self.rate))
         self.vis_result_checkBox.setChecked(self.vis_result)
         self.vis_result_checkBox.setText("可视化识别结果(对识别结果进行修改及导出)")
 
         # 自动复制到剪贴板checkBox
-        self.Clipboard_checkBox = QtWidgets.QCheckBox(self.tab_2)
+        self.Clipboard_checkBox = QCheckBox(self.tab_2)
         self.Clipboard_checkBox.setGeometry(
-            QtCore.QRect(30 * self.rate, 73 * self.rate, 231 * self.rate, 16 * self.rate))
+            QRect(30 * self.rate, 73 * self.rate, 231 * self.rate, 16 * self.rate))
         self.Clipboard_checkBox.setChecked(self.showClipboard)
         self.Clipboard_checkBox.setText("识别结果自动复制到剪贴板")
 
         # 字体大小设定标签
-        self.fontSize_label = QtWidgets.QLabel(self.tab_2)
-        self.fontSize_label.setGeometry(QtCore.QRect(30 * self.rate, 100 * self.rate, 145 * self.rate, 16 * self.rate))
+        self.fontSize_label = QLabel(self.tab_2)
+        self.fontSize_label.setGeometry(QRect(30 * self.rate, 100 * self.rate, 145 * self.rate, 16 * self.rate))
         self.fontSize_label.setText("文字大小：")
 
         # 字体大小设定
-        self.fontSize_spinBox = QtWidgets.QSpinBox(self.tab_2)
+        self.fontSize_spinBox = QSpinBox(self.tab_2)
         self.fontSize_spinBox.setGeometry(
-            QtCore.QRect(190 * self.rate, 100 * self.rate, 50 * self.rate, 25 * self.rate))
+            QRect(190 * self.rate, 100 * self.rate, 50 * self.rate, 25 * self.rate))
         self.fontSize_spinBox.setMinimum(10)
         self.fontSize_spinBox.setMaximum(30)
         self.fontSize_spinBox.setStyleSheet("background: rgba(255, 255, 255, 0)")
         self.fontSize_spinBox.setValue(self.fontSize)
 
         # 字体样式设定标签
-        self.translate_label = QtWidgets.QLabel(self.tab_2)
-        self.translate_label.setGeometry(QtCore.QRect(30 * self.rate, 130 * self.rate, 145 * self.rate, 20 * self.rate))
+        self.translate_label = QLabel(self.tab_2)
+        self.translate_label.setGeometry(QRect(30 * self.rate, 130 * self.rate, 145 * self.rate, 20 * self.rate))
         self.translate_label.setText("字体样式：")
 
         # 字体样式设定
-        self.fontComboBox = QtWidgets.QFontComboBox(self.tab_2)
-        self.fontComboBox.setGeometry(QtCore.QRect(190 * self.rate, 130 * self.rate, 151 * self.rate, 25 * self.rate))
+        self.fontComboBox = QFontComboBox(self.tab_2)
+        self.fontComboBox.setGeometry(QRect(190 * self.rate, 130 * self.rate, 151 * self.rate, 25 * self.rate))
         self.fontComboBox.setStyleSheet("background: rgba(255, 255, 255, 0.4)")
         self.fontComboBox.activated[str].connect(self.get_fontType)
-        self.ComboBoxFont = QtGui.QFont(self.fontType)
+        self.ComboBoxFont = QFont(self.fontType)
         self.fontComboBox.setCurrentFont(self.ComboBoxFont)
 
         # 显示颜色样式checkBox
-        self.showColorType_checkBox = QtWidgets.QCheckBox(self.tab_2)
+        self.showColorType_checkBox = QCheckBox(self.tab_2)
         self.showColorType_checkBox.setGeometry(
-            QtCore.QRect(30 * self.rate, 160 * self.rate, 340 * self.rate, 20 * self.rate))
+            QRect(30 * self.rate, 160 * self.rate, 340 * self.rate, 20 * self.rate))
         self.showColorType_checkBox.setChecked(self.showColorType)
         self.showColorType_checkBox.setText("使用实心字体样式（不勾选则显示描边字体样式）")
 
         # 字体颜色设定标签
-        self.colour_label = QtWidgets.QLabel(self.tab_2)
-        self.colour_label.setGeometry(QtCore.QRect(30 * self.rate, 220 * self.rate, 340 * self.rate, 25 * self.rate))
+        self.colour_label = QLabel(self.tab_2)
+        self.colour_label.setGeometry(QRect(30 * self.rate, 220 * self.rate, 340 * self.rate, 25 * self.rate))
         self.colour_label.setText("设置文字颜色：")
 
         # 字体颜色按钮
-        self.originalColour_toolButton = QtWidgets.QToolButton(self.tab_2)
+        self.originalColour_toolButton = QToolButton(self.tab_2)
         self.originalColour_toolButton.setGeometry(
-            QtCore.QRect(110 * self.rate, 220 * self.rate, 71 * self.rate, 25 * self.rate))
+            QRect(110 * self.rate, 220 * self.rate, 71 * self.rate, 25 * self.rate))
         self.originalColour_toolButton.setStyleSheet(
             "background: rgba(255, 255, 255, 0.4); color: {};".format(self.originalColor))
         self.originalColour_toolButton.clicked.connect(lambda: self.get_font_color())
         self.originalColour_toolButton.setText("选择颜色")
 
         # 翻译键快捷键checkBox
-        self.shortcutKey1_checkBox = QtWidgets.QCheckBox(self.tab_2)
+        self.shortcutKey1_checkBox = QCheckBox(self.tab_2)
         self.shortcutKey1_checkBox.setGeometry(
-            QtCore.QRect(30 * self.rate, 275 * self.rate, 160 * self.rate, 16 * self.rate))
+            QRect(30 * self.rate, 275 * self.rate, 160 * self.rate, 16 * self.rate))
         self.shortcutKey1_checkBox.setStyleSheet("background: transparent;")
         self.shortcutKey1_checkBox.setChecked(self.showHotKey1)
         self.shortcutKey1_checkBox.setText("是否使用识别快捷键：")
 
         # 翻译键的快捷键
-        self.HotKey1_ComboBox = QtWidgets.QComboBox(self.tab_2)
+        self.HotKey1_ComboBox = QComboBox(self.tab_2)
         self.HotKey1_ComboBox.setGeometry(
-            QtCore.QRect(200 * self.rate, 270 * self.rate, 120 * self.rate, 21 * self.rate))
+            QRect(200 * self.rate, 270 * self.rate, 120 * self.rate, 21 * self.rate))
         self.HotKey1_ComboBox.setStyleSheet("background: rgba(255, 255, 255, 0.4);")
         for index, HotKey in enumerate(self.HotKeys):
             self.HotKey1_ComboBox.addItem("")
@@ -167,17 +170,17 @@ class SettinInterface(QWidget):
         self.HotKey1_ComboBox.setCurrentIndex(self.showHotKey1Value1)
 
         # 范围键快捷键checkBox
-        self.shortcutKey2_checkBox = QtWidgets.QCheckBox(self.tab_2)
+        self.shortcutKey2_checkBox = QCheckBox(self.tab_2)
         self.shortcutKey2_checkBox.setGeometry(
-            QtCore.QRect(30 * self.rate, 315 * self.rate, 160 * self.rate, 16 * self.rate))
+            QRect(30 * self.rate, 315 * self.rate, 160 * self.rate, 16 * self.rate))
         self.shortcutKey2_checkBox.setStyleSheet("background: transparent;")
         self.shortcutKey2_checkBox.setChecked(self.showHotKey2)
         self.shortcutKey2_checkBox.setText("是否使用截屏快捷键：")
 
         # 范围键的快捷键
-        self.HotKey2_ComboBox = QtWidgets.QComboBox(self.tab_2)
+        self.HotKey2_ComboBox = QComboBox(self.tab_2)
         self.HotKey2_ComboBox.setGeometry(
-            QtCore.QRect(200 * self.rate, 310 * self.rate, 120 * self.rate, 21 * self.rate))
+            QRect(200 * self.rate, 310 * self.rate, 120 * self.rate, 21 * self.rate))
         self.HotKey2_ComboBox.setStyleSheet("background: rgba(255, 255, 255, 0.4);")
         for index, HotKey in enumerate(self.HotKeys):
             self.HotKey2_ComboBox.addItem("")
@@ -185,44 +188,44 @@ class SettinInterface(QWidget):
         self.HotKey2_ComboBox.setCurrentIndex(self.showHotKey1Value2)
 
         # 翻译框透明度设定标签1
-        self.tab4_label_1 = QtWidgets.QLabel(self.tab_2)
-        self.tab4_label_1.setGeometry(QtCore.QRect(30 * self.rate, 380 * self.rate, 211 * self.rate, 16 * self.rate))
+        self.tab4_label_1 = QLabel(self.tab_2)
+        self.tab4_label_1.setGeometry(QRect(30 * self.rate, 380 * self.rate, 211 * self.rate, 16 * self.rate))
         self.tab4_label_1.setText("调节界面的背景透明度")
 
         # 翻译框透明度设定
-        self.horizontalSlider = QtWidgets.QSlider(self.tab_2)
+        self.horizontalSlider = QSlider(self.tab_2)
         self.horizontalSlider.setGeometry(
-            QtCore.QRect(30 * self.rate, 400 * self.rate, 347 * self.rate, 22 * self.rate))
+            QRect(30 * self.rate, 400 * self.rate, 347 * self.rate, 22 * self.rate))
         self.horizontalSlider.setStyleSheet("background: transparent;")
         self.horizontalSlider.setMaximum(100)
-        self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.horizontalSlider.setOrientation(Qt.Horizontal)
         self.horizontalSlider.setValue(self.horizontal)
         self.horizontalSlider.valueChanged.connect(self.get_horizontal)
 
         # 翻译框透明度设定标签2
-        self.tab4_label_2 = QtWidgets.QLabel(self.tab_2)
-        self.tab4_label_2.setGeometry(QtCore.QRect(30 * self.rate, 420 * self.rate, 61 * self.rate, 20 * self.rate))
+        self.tab4_label_2 = QLabel(self.tab_2)
+        self.tab4_label_2.setGeometry(QRect(30 * self.rate, 420 * self.rate, 61 * self.rate, 20 * self.rate))
         self.tab4_label_2.setText("完全透明")
 
         # 翻译框透明度设定标签3
-        self.tab4_label_3 = QtWidgets.QLabel(self.tab_2)
-        self.tab4_label_3.setGeometry(QtCore.QRect(310 * self.rate, 420 * self.rate, 71 * self.rate, 20 * self.rate))
+        self.tab4_label_3 = QLabel(self.tab_2)
+        self.tab4_label_3.setGeometry(QRect(310 * self.rate, 420 * self.rate, 71 * self.rate, 20 * self.rate))
         self.tab4_label_3.setText("完全不透明")
 
         # 工具栏4
-        self.tab_4 = QtWidgets.QWidget()
+        self.tab_4 = QWidget()
         self.tabWidget.addTab(self.tab_4, "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), "关于")
 
         # 设置保存按钮
-        self.SaveButton = QtWidgets.QPushButton(self)
-        self.SaveButton.setGeometry(QtCore.QRect(85 * self.rate, 515 * self.rate, 90 * self.rate, 30 * self.rate))
+        self.SaveButton = QPushButton(self)
+        self.SaveButton.setGeometry(QRect(85 * self.rate, 515 * self.rate, 90 * self.rate, 30 * self.rate))
         self.SaveButton.setStyleSheet("background: rgba(255, 255, 255, 0.4);font: 12pt;")
         self.SaveButton.setText("保存设置")
 
         # 设置返回按钮
-        self.CancelButton = QtWidgets.QPushButton(self)
-        self.CancelButton.setGeometry(QtCore.QRect(232 * self.rate, 515 * self.rate, 90 * self.rate, 30 * self.rate))
+        self.CancelButton = QPushButton(self)
+        self.CancelButton.setGeometry(QRect(232 * self.rate, 515 * self.rate, 90 * self.rate, 30 * self.rate))
         self.CancelButton.setStyleSheet("background: rgba(255, 255, 255, 0.4);font: 12pt")
         self.CancelButton.setText("退 出")
 
@@ -275,20 +278,20 @@ class SettinInterface(QWidget):
                         'Back', 'Tab', 'Space', 'Left', 'Up', 'Right', 'Down', 'Delete',
                         'Numpad0', 'Numpad1', 'Numpad2', 'Numpad3', 'Numpad4', 'Numpad5', 'Numpad6', 'Numpad7',
                         'Numpad8', 'Numpad9']
-        self.QtHotKeys = [QtCore.Qt.Key_F1, QtCore.Qt.Key_F2, QtCore.Qt.Key_F3, QtCore.Qt.Key_F4, QtCore.Qt.Key_F5,
-                          QtCore.Qt.Key_F6, QtCore.Qt.Key_F7, QtCore.Qt.Key_F8, QtCore.Qt.Key_F9, QtCore.Qt.Key_F10,
-                          QtCore.Qt.Key_F11, QtCore.Qt.Key_F12, QtCore.Qt.Key_A, QtCore.Qt.Key_B, QtCore.Qt.Key_C,
-                          QtCore.Qt.Key_D, QtCore.Qt.Key_E, QtCore.Qt.Key_F, QtCore.Qt.Key_G, QtCore.Qt.Key_H,
-                          QtCore.Qt.Key_I, QtCore.Qt.Key_J, QtCore.Qt.Key_K, QtCore.Qt.Key_L, QtCore.Qt.Key_M,
-                          QtCore.Qt.Key_N, QtCore.Qt.Key_O, QtCore.Qt.Key_P, QtCore.Qt.Key_Q, QtCore.Qt.Key_R,
-                          QtCore.Qt.Key_S, QtCore.Qt.Key_T, QtCore.Qt.Key_U, QtCore.Qt.Key_V, QtCore.Qt.Key_W,
-                          QtCore.Qt.Key_X, QtCore.Qt.Key_Y, QtCore.Qt.Key_Z, QtCore.Qt.Key_0, QtCore.Qt.Key_1,
-                          QtCore.Qt.Key_2, QtCore.Qt.Key_3, QtCore.Qt.Key_4, QtCore.Qt.Key_5, QtCore.Qt.Key_6,
-                          QtCore.Qt.Key_7, QtCore.Qt.Key_8, QtCore.Qt.Key_9, QtCore.Qt.Key_Back, QtCore.Qt.Key_Tab,
-                          QtCore.Qt.Key_Space, QtCore.Qt.Key_Left, QtCore.Qt.Key_Up, QtCore.Qt.Key_Right,
-                          QtCore.Qt.Key_Down, QtCore.Qt.Key_Delete, QtCore.Qt.Key_0, QtCore.Qt.Key_1, QtCore.Qt.Key_2,
-                          QtCore.Qt.Key_3, QtCore.Qt.Key_4, QtCore.Qt.Key_5, QtCore.Qt.Key_6, QtCore.Qt.Key_7,
-                          QtCore.Qt.Key_8, QtCore.Qt.Key_9]
+        self.QtHotKeys = [Qt.Key_F1, Qt.Key_F2, Qt.Key_F3, Qt.Key_F4, Qt.Key_F5,
+                          Qt.Key_F6, Qt.Key_F7, Qt.Key_F8, Qt.Key_F9, Qt.Key_F10,
+                          Qt.Key_F11, Qt.Key_F12, Qt.Key_A, Qt.Key_B, Qt.Key_C,
+                          Qt.Key_D, Qt.Key_E, Qt.Key_F, Qt.Key_G, Qt.Key_H,
+                          Qt.Key_I, Qt.Key_J, Qt.Key_K, Qt.Key_L, Qt.Key_M,
+                          Qt.Key_N, Qt.Key_O, Qt.Key_P, Qt.Key_Q, Qt.Key_R,
+                          Qt.Key_S, Qt.Key_T, Qt.Key_U, Qt.Key_V, Qt.Key_W,
+                          Qt.Key_X, Qt.Key_Y, Qt.Key_Z, Qt.Key_0, Qt.Key_1,
+                          Qt.Key_2, Qt.Key_3, Qt.Key_4, Qt.Key_5, Qt.Key_6,
+                          Qt.Key_7, Qt.Key_8, Qt.Key_9, Qt.Key_Back, Qt.Key_Tab,
+                          Qt.Key_Space, Qt.Key_Left, Qt.Key_Up, Qt.Key_Right,
+                          Qt.Key_Down, Qt.Key_Delete, Qt.Key_0, Qt.Key_1, Qt.Key_2,
+                          Qt.Key_3, Qt.Key_4, Qt.Key_5, Qt.Key_6, Qt.Key_7,
+                          Qt.Key_8, Qt.Key_9]
         self.QtHotKeysMaps = {}
         for idx in range(len(self.HotKeys)):
             self.QtHotKeysMaps[self.HotKeys[idx]] = self.QtHotKeys[idx]

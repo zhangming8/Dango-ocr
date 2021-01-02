@@ -1,9 +1,11 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
+# -*- coding: utf-8 -*-
 
 from json import load, dump
 from traceback import format_exc
+
+from PyQt5.QtWidgets import QMainWindow, QLabel, QStatusBar, QPushButton, QApplication
+from PyQt5.QtGui import QFont, QCursor, QMouseEvent
+from PyQt5.QtCore import Qt, QPoint, QRect
 
 from configs import folder_path
 from src.api import write_error

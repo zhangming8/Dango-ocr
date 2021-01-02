@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-
 from re import findall
 import sys
 from json import load, dump
 from traceback import format_exc
+
+from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget
+from PyQt5.QtGui import QPen, QBitmap, QPainter, QBrush
+from PyQt5.QtCore import QRect, QPoint, Qt
 
 sys.path.append(".")
 from configs import folder_path

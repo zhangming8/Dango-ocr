@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from time import time, sleep
 from json import load, dump
 from cv2 import cvtColor, COLOR_BGR2GRAY, calcHist, resize
@@ -9,7 +10,7 @@ from difflib import SequenceMatcher
 from qtawesome import icon as qticon
 
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import *
+from PyQt5.QtCore import QThread, pyqtSignal
 
 from src.api import orc, write_error
 from configs import folder_path, Config
@@ -141,7 +142,7 @@ def translate(window, data, use_translate_signal):
             with open(folder_path + "/config/识别结果.txt", "a+", encoding="utf-8") as file:
                 file.write(content)
 
-            use_translate_signal.emit(signal_list, original, data,  result_with_location)
+            use_translate_signal.emit(signal_list, original, data, result_with_location)
 
         elif not sign:
             signal_list.append("error")

@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QPixmap
-
 from os.path import dirname
 from time import localtime, time, strftime
 from docx import Document
@@ -12,6 +7,10 @@ import numpy as np
 from traceback import format_exc
 from cv2 import imread, cvtColor, COLOR_BGR2RGB, imwrite
 import sys
+
+from PyQt5.QtCore import Qt, pyqtSignal, QPointF, QRect
+from PyQt5.QtWidgets import QTextEdit, QPushButton, QFileDialog, QApplication, QWidget
+from PyQt5.QtGui import QPixmap, QImage, QPalette, QBrush, QPainter, QPen, QColor, QPolygonF
 
 sys.path.append(".")
 from configs import folder_path
@@ -44,32 +43,32 @@ class VisResult(QWidget):
         self.setMaximumHeight(img_show_h + 60)
         self.setMaximumWidth(img_show_w * 2)
 
-        frame = QtGui.QImage(img_show.data, img_show.shape[1], img_show.shape[0], img_show.shape[1] * img_show.shape[2],
-                             QtGui.QImage.Format_RGB888)
+        frame = QImage(img_show.data, img_show.shape[1], img_show.shape[0], img_show.shape[1] * img_show.shape[2],
+                       QImage.Format_RGB888)
         pix = QPixmap(frame)
-        palette1 = QtGui.QPalette()
-        palette1.setBrush(self.backgroundRole(), QtGui.QBrush(pix))  # 背景图片
+        palette1 = QPalette()
+        palette1.setBrush(self.backgroundRole(), QBrush(pix))  # 背景图片
         self.setPalette(palette1)
         self.setAutoFillBackground(False)
         self.draw_text(img_w)
 
         # 设置保存按钮
-        self.SaveButton = QtWidgets.QPushButton(self)
-        self.SaveButton.setGeometry(QtCore.QRect(img_show_w - 170, img_show_h + 20, 90, 30))
+        self.SaveButton = QPushButton(self)
+        self.SaveButton.setGeometry(QRect(img_show_w - 170, img_show_h + 20, 90, 30))
         self.SaveButton.setStyleSheet("background: rgba(255, 255, 255, 0.4);font: 12pt;")
         self.SaveButton.setText("确 定")
         self.SaveButton.clicked.connect(self.send_text)
 
         # 设置导出按钮
-        self.SaveButton = QtWidgets.QPushButton(self)
-        self.SaveButton.setGeometry(QtCore.QRect(img_show_w - 45, img_show_h + 20, 90, 30))
+        self.SaveButton = QPushButton(self)
+        self.SaveButton.setGeometry(QRect(img_show_w - 45, img_show_h + 20, 90, 30))
         self.SaveButton.setStyleSheet("background: rgba(255, 255, 255, 0.4);font: 12pt;")
         self.SaveButton.setText("导 出")
         self.SaveButton.clicked.connect(self.save_text)
 
         # 设置返回按钮
-        self.CancelButton = QtWidgets.QPushButton(self)
-        self.CancelButton.setGeometry(QtCore.QRect(img_show_w + 175 - 90, img_show_h + 20, 90, 30))
+        self.CancelButton = QPushButton(self)
+        self.CancelButton.setGeometry(QRect(img_show_w + 175 - 90, img_show_h + 20, 90, 30))
         self.CancelButton.setStyleSheet("background: rgba(255, 255, 255, 0.4);font: 12pt")
         self.CancelButton.setText("取 消")
         self.CancelButton.clicked.connect(self.close)
@@ -79,20 +78,20 @@ class VisResult(QWidget):
 
     # 绘制事件
     def paintEvent(self, event):
-        painter = QtGui.QPainter(self)
+        painter = QPainter(self)
 
         # 在左边原图上画多边形
-        pen = QtGui.QPen(QtGui.QColor(255, 0, 0))  # set lineColor
+        pen = QPen(QColor(255, 0, 0))  # set lineColor
         pen.setWidth(1)  # set lineWidth
-        brush = QtGui.QBrush(QtGui.QColor(143, 143, 143, 100))  # set fillColor
+        brush = QBrush(QColor(143, 143, 143, 100))  # set fillColor
         painter.setPen(pen)
         painter.setBrush(brush)
         self.draw_polygon(painter, 0)
 
         # 在右边画结果
-        # pen = QtGui.QPen(QtGui.QColor(0, 0, 0))  # set lineColor
+        # pen = QPen(QColor(0, 0, 0))  # set lineColor
         # pen.setWidth(1)  # set lineWidth
-        # brush = QtGui.QBrush(QtGui.QColor(143, 143, 143, 0))  # set fillColor
+        # brush = QBrush(QColor(143, 143, 143, 0))  # set fillColor
         # painter.setPen(pen)
         # painter.setBrush(brush)
         # self.draw_polygon(painter, self.img_w)
@@ -104,9 +103,9 @@ class VisResult(QWidget):
         for res in self.results:
             text_region = res["text_region"]
 
-            polygon = QtGui.QPolygonF()
+            polygon = QPolygonF()
             for region in text_region:
-                polygon.append(QtCore.QPointF(img_w + region[0], region[1]))
+                polygon.append(QPointF(img_w + region[0], region[1]))
             qp.drawPolygon(polygon)
 
     def draw_text(self, img_w):
@@ -119,12 +118,12 @@ class VisResult(QWidget):
             box_w = text_region[2][0] - text_region[0][0]
             box_h = max(20, box_h)
 
-            vis_text = QtWidgets.QTextEdit(self)
-            vis_text.setGeometry(QtCore.QRect(img_w + text_region[0][0], text_region[0][1], box_w, box_h))
+            vis_text = QTextEdit(self)
+            vis_text.setGeometry(QRect(img_w + text_region[0][0], text_region[0][1], box_w, box_h))
             vis_text.setStyleSheet("QTextEdit {""border-width:1; border-style:outset""}"
                                    "QTextEdit:focus {""border: 2px dashed #9265d1;""}")
-            vis_text.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-            vis_text.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+            vis_text.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            vis_text.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
             vis_text.setPlainText(text)
             self.vis_text_result.append(vis_text)
 

@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 from qtawesome import icon as qticon
 from json import load, dump
 from traceback import format_exc
@@ -10,6 +7,12 @@ from pyperclip import copy
 from threading import Thread
 from cv2 import imread
 from os.path import dirname
+
+from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
+from PyQt5.QtCore import QObject, pyqtSignal, QSize, QRect, QPoint, Qt, QUrl
+from PyQt5.QtGui import QIcon, QPixmap, QFont, QTextCharFormat, QPen, QColor, QCursor, QMouseEvent
+from PyQt5.QtWidgets import QSystemTrayIcon, QLabel, QTextBrowser, QPushButton, QStatusBar, QFileDialog, QApplication, \
+    QMainWindow
 
 from src.translate import TranslateThread
 from src.switch import SwitchBtn
@@ -598,6 +601,7 @@ class MainInterface(QMainWindow):
     # 将翻译结果打印
     def display_modify_text(self, result, data, translate_type):
         self.translateText.clear()
+        self.original = result
         if data["showColorType"] == "False":
             self.format.setTextOutline(
                 QPen(QColor(data["fontColor"][translate_type]), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
@@ -608,13 +612,22 @@ class MainInterface(QMainWindow):
 
     # 语音朗读
     def play_voice(self):
-
         if not self.original:
             return
         try:
-            thread = Thread(target=Voice, args=(self.original,))
-            thread.setDaemon(True)
-            thread.start()
+            # thread = Thread(target=Voice, args=(self.original,))
+            # thread.setDaemon(True)
+            # thread.start()
+
+            self.player = None
+            flag, voice_file = Voice(self.original).save_voice()
+            if flag:
+                file = QUrl.fromLocalFile(voice_file)
+                content = QMediaContent(file)
+                self.player = QMediaPlayer()
+                self.player.setMedia(content)
+                self.player.play()
+
         except Exception:
             write_error(format_exc())
 
