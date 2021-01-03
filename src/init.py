@@ -8,7 +8,7 @@ from threading import Thread
 from cv2 import imread
 from os.path import dirname
 
-from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
+# from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtCore import QObject, pyqtSignal, QSize, QRect, QPoint, Qt, QUrl
 from PyQt5.QtGui import QIcon, QPixmap, QFont, QTextCharFormat, QPen, QColor, QCursor, QMouseEvent
 from PyQt5.QtWidgets import QSystemTrayIcon, QLabel, QTextBrowser, QPushButton, QStatusBar, QFileDialog, QApplication, \
@@ -107,7 +107,7 @@ class MainInterface(QMainWindow):
         # 工具栏标签
         self.titleLabel = QLabel(self)
         self.titleLabel.setGeometry(0, 0, 800 * self.rate, 30 * self.rate)
-        self.titleLabel.setStyleSheet("background-color:rgba(62, 62, 62, 0.01)")
+        self.titleLabel.setStyleSheet("background-color:rgba(62, 62, 62, {})".format(self.horizontal))
 
         self.Font = QFont()
         self.Font.setFamily("华康方圆体W7")
@@ -118,13 +118,8 @@ class MainInterface(QMainWindow):
         self.translateText.setGeometry(0, 30 * self.rate, 1500 * self.rate, 90 * self.rate)
         self.translateText.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.translateText.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.translateText.setStyleSheet("border-width:0;\
-                                          border-style:outset;\
-                                          border-top:0px solid #e8f3f9;\
-                                          color:white;\
-                                          font-weight: bold;\
-                                          background-color:rgba(62, 62, 62, %s)"
-                                         % (self.horizontal))
+        self.translateText.setStyleSheet("border-width:0;border-style:outset;border-top:0px solid #e8f3f9;color:white;\
+                                          font-weight: bold;background-color:rgba(62, 62, 62, %s)"% (self.horizontal))
         self.translateText.setFont(self.Font)
 
         # 翻译框加入描边文字
@@ -153,7 +148,7 @@ class MainInterface(QMainWindow):
         self.RangeButton.setIconSize(QSize(20, 20))
         self.RangeButton.setGeometry(QRect(193 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.RangeButton.setToolTip('<b>截屏识别图片 ScreenShot Range</b><br>框选要识别的区域')
-        self.RangeButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
+        self.RangeButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
         self.RangeButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.RangeButton.hide()
 
@@ -162,7 +157,7 @@ class MainInterface(QMainWindow):
         self.StartButton.setIconSize(QSize(20, 20))
         self.StartButton.setGeometry(QRect(233 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.StartButton.setToolTip('<b>识别 Recognize</b><br>点击开始（手动）<br>开始/停止（自动）')
-        self.StartButton.setStyleSheet("background: transparent")
+        self.StartButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
         self.StartButton.clicked.connect(self.start_login)
         self.StartButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.StartButton.hide()
@@ -172,7 +167,7 @@ class MainInterface(QMainWindow):
         self.OpenButton.setIconSize(QSize(20, 20))
         self.OpenButton.setGeometry(QRect(273 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.OpenButton.setToolTip('<b>打开识别图片 Open image</b><br> 识别本地图片')
-        self.OpenButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
+        self.OpenButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
         self.OpenButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.OpenButton.clicked.connect(self.open_image)
         self.OpenButton.hide()
@@ -182,7 +177,7 @@ class MainInterface(QMainWindow):
         self.CopyButton.setIconSize(QSize(20, 20))
         self.CopyButton.setGeometry(QRect(313 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.CopyButton.setToolTip('<b>复制 Copy</b><br>将当前识别到的文本<br>复制至剪贴板')
-        self.CopyButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
+        self.CopyButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
         self.CopyButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.CopyButton.clicked.connect(lambda: copy(self.original))
         self.CopyButton.hide()
@@ -192,7 +187,7 @@ class MainInterface(QMainWindow):
         self.playVoiceButton.setIconSize(QSize(20, 20))
         self.playVoiceButton.setGeometry(QRect(353 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.playVoiceButton.setToolTip('<b>朗读原文 Play Voice</b><br>朗读识别到的原文')
-        self.playVoiceButton.setStyleSheet("background: transparent")
+        self.playVoiceButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
         self.playVoiceButton.clicked.connect(self.play_voice)
         self.playVoiceButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.playVoiceButton.hide()
@@ -217,7 +212,7 @@ class MainInterface(QMainWindow):
                                                   border-style:outset;\
                                                   border-top:0px solid #e8f3f9;\
                                                   color:white;\
-                                                  background-color:rgba(143, 143, 143, 0)")
+                                                  background-color:rgba(200, 200, 200, 0.4)")
         self.languageText.setCursor(QCursor(Qt.PointingHandCursor))
         self.languageText.setText(config.letter_chinese_dict[self.data["language"]])
         self.languageText.setFont(languageFont)
@@ -228,7 +223,7 @@ class MainInterface(QMainWindow):
         self.SettinButton.setIconSize(QSize(20, 20))
         self.SettinButton.setGeometry(QRect(518 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.SettinButton.setToolTip('<b>设置 Settin</b>')
-        self.SettinButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
+        self.SettinButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
         self.SettinButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.SettinButton.hide()
 
@@ -237,7 +232,7 @@ class MainInterface(QMainWindow):
         self.LockButton.setIconSize(QSize(20, 20))
         self.LockButton.setGeometry(QRect(562 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.LockButton.setToolTip('<b>锁定翻译界面 Lock</b>')
-        self.LockButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
+        self.LockButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
         self.LockButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.LockButton.clicked.connect(self.lock)
         self.LockButton.hide()
@@ -247,7 +242,7 @@ class MainInterface(QMainWindow):
         self.MinimizeButton.setIconSize(QSize(20, 20))
         self.MinimizeButton.setGeometry(QRect(602 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.MinimizeButton.setToolTip('<b>最小化 Minimize</b>')
-        self.MinimizeButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
+        self.MinimizeButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
         self.MinimizeButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.MinimizeButton.clicked.connect(self.showMinimized)
         self.MinimizeButton.hide()
@@ -257,14 +252,15 @@ class MainInterface(QMainWindow):
         self.QuitButton.setIconSize(QSize(20, 20))
         self.QuitButton.setGeometry(QRect(642 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.QuitButton.setToolTip('<b>退出程序 Quit</b>')
-        self.QuitButton.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
+        self.QuitButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
         self.QuitButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.QuitButton.hide()
 
         # 右下角用于拉伸界面的控件 mac系统应该注释掉
-        self.statusbar = QStatusBar(self)
-        self.statusbar.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
-        self.setStatusBar(self.statusbar)
+        # self.statusbar = QStatusBar(self)
+        # self.statusbar.setStyleSheet("background-color:rgba(62, 62, 62, 0);")
+        # self.setStatusBar(self.statusbar)
+        self.statusBar().close()
 
     # 锁定界面
     def lock(self):
@@ -290,7 +286,6 @@ class MainInterface(QMainWindow):
                                               border-style:outset;\
                                               border-top:0px solid #e8f3f9;\
                                               color:white;\
-                                              font-weight: bold;\
                                               background-color:rgba(62, 62, 62, %s)"
                                              % (self.horizontal))
         except Exception:
@@ -329,7 +324,8 @@ class MainInterface(QMainWindow):
             self._endPos = e.pos() - self._startPos
             self.move(self.pos() + self._endPos)
         except Exception:
-            write_error(format_exc())
+            pass
+            # write_error(format_exc())
 
     # 鼠标移动事件 mac
     # def mouseMoveEvent(self, QMouseEvent):
@@ -567,6 +563,7 @@ class MainInterface(QMainWindow):
 
         # 翻译界面清屏
         self.translateText.clear()
+        self.translateText.append(' ')
         # 设定翻译时的字体类型和大小
         self.Font.setFamily(data["fontType"])
         self.Font.setPointSize(data["fontSize"])
@@ -615,18 +612,19 @@ class MainInterface(QMainWindow):
         if not self.original:
             return
         try:
-            # thread = Thread(target=Voice, args=(self.original,))
-            # thread.setDaemon(True)
-            # thread.start()
+            voice = Voice(self.original)
+            thread = Thread(target=voice.save_voice)
+            thread.setDaemon(True)
+            thread.start()
 
-            self.player = None
-            flag, voice_file = Voice(self.original).save_voice()
-            if flag:
-                file = QUrl.fromLocalFile(voice_file)
-                content = QMediaContent(file)
-                self.player = QMediaPlayer()
-                self.player.setMedia(content)
-                self.player.play()
+            # self.player = None
+            # flag, voice_file = Voice(self.original).save_voice()
+            # if flag:
+            #     file = QUrl.fromLocalFile(voice_file)
+            #     content = QMediaContent(file)
+            #     self.player = QMediaPlayer()
+            #     self.player.setMedia(content)
+            #     self.player.play()
 
         except Exception:
             write_error(format_exc())

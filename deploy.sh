@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-save_name="DangoOCR_ubuntu_v1"
+save_name="DangoOCR_mac_v1"
 main="main"
 
 cp configs2.py configs.py

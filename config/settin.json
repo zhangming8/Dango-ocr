@@ -4,7 +4,7 @@
     "caiyunPrivate": "#ff0000",
     "original": "#d93636"
   },
-  "horizontal": 0,
+  "horizontal": 13,
   "showOriginal": "True",
   "vis_result": "True",
   "showHotKeyValue2": "F2",
@@ -12,10 +12,10 @@
   "showHotKey2": "True",
   "fontType": "\u534e\u5eb7\u65b9\u5706\u4f53W7",
   "range": {
-    "X2": 549,
-    "Y2": 635,
-    "X1": 207,
-    "Y1": 546
+    "X2": 630,
+    "Y2": 483,
+    "X1": 85,
+    "Y1": 453
   },
   "showHotKeyValue1": "F3",
   "showClipboard": "False",

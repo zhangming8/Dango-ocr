@@ -1,6 +1,6 @@
 from urllib import parse
 from requests import Session
-# from playsound import playsound
+from playsound import playsound
 from traceback import format_exc
 from json import load
 from js2py import EvalJs
@@ -60,7 +60,7 @@ class Voice(object):
 
             # 没有gi解决办法(https://blog.csdn.net/xxxlinttp/article/details/78056467):
             # 复制一份/home/ming/miniconda3/envs/python36/lib/python3.6/site-packages/gi到自己的虚拟环境
-            # playsound(folder_path + '/config/voice.mp3')
+            playsound(folder_path + '/config/voice.mp3')
             return True, save_path
 
         except Exception:

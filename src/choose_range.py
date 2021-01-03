@@ -51,9 +51,11 @@ class Range(QMainWindow):
             self.Button.hide()
 
             # 右下角用于拉伸界面的控件
-            self.statusbar = QStatusBar(self)
-            self.setStatusBar(self.statusbar)
-            self._startPos = None
+            # self.statusbar = QStatusBar(self)
+            # self.setStatusBar(self.statusbar)
+            # self._startPos = None
+
+            self.statusBar().close()
         except Exception:
             write_error(format_exc())
 

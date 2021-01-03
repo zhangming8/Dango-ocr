@@ -20,7 +20,7 @@ class WScreenShot(QWidget):
 
         super(WScreenShot, self).__init__(parent)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)  # | Qt.Tool)
-        self.setWindowState(Qt.WindowFullScreen | Qt.WindowActive)
+        # self.setWindowState(Qt.WindowFullScreen | Qt.WindowActive)
         self.setStyleSheet('''background-color:black; ''')
         self.setWindowOpacity(0.6)
         desktopRect = QDesktopWidget().screenGeometry()
