@@ -10,7 +10,7 @@ rm -rf build dist "${main}.spec" "${save_name}.rar"
 pyinstaller -D -w -i config/logo.ico "${main}.py"
 cp -r config "dist/${main}/"
 
-mv "dist/${main}/${main}" "dist/${main}/DangoOCR"
+mv "dist/${main}/${main}" "dist/${main}/DangoOCR.command"
 mv "dist/${main}" "dist/${save_name}"
 cp *.TTC dist/
 
