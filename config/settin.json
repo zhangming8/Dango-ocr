@@ -12,10 +12,10 @@
   "showHotKey2": "True",
   "fontType": "\u534e\u5eb7\u65b9\u5706\u4f53W7",
   "range": {
-    "X2": 549,
-    "Y2": 635,
-    "X1": 207,
-    "Y1": 546
+    "X2": 538,
+    "Y2": 478,
+    "X1": 314,
+    "Y1": 407
   },
   "showHotKeyValue1": "F3",
   "showClipboard": "False",

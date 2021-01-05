@@ -3,7 +3,7 @@
 from json import dump, load
 
 from PyQt5.QtWidgets import QLabel, QPushButton, QApplication, QWidget, QColorDialog, QTabWidget, QComboBox, \
-    QCheckBox, QSpinBox, QFontComboBox, QToolButton, QSlider
+    QCheckBox, QSpinBox, QFontComboBox, QToolButton, QSlider, QLineEdit
 from PyQt5.QtGui import QIcon, QPixmap, QFont
 from PyQt5.QtCore import QSize, QRect, Qt
 
@@ -203,19 +203,39 @@ class SettinInterface(QWidget):
         self.horizontalSlider.valueChanged.connect(self.get_horizontal)
 
         # 翻译框透明度设定标签2
-        self.tab4_label_2 = QLabel(self.tab_2)
-        self.tab4_label_2.setGeometry(QRect(30 * self.rate, 420 * self.rate, 61 * self.rate, 20 * self.rate))
-        self.tab4_label_2.setText("完全透明")
+        self.tab2_label_2 = QLabel(self.tab_2)
+        self.tab2_label_2.setGeometry(QRect(30 * self.rate, 420 * self.rate, 61 * self.rate, 20 * self.rate))
+        self.tab2_label_2.setText("完全透明")
 
         # 翻译框透明度设定标签3
-        self.tab4_label_3 = QLabel(self.tab_2)
-        self.tab4_label_3.setGeometry(QRect(310 * self.rate, 420 * self.rate, 71 * self.rate, 20 * self.rate))
-        self.tab4_label_3.setText("完全不透明")
+        self.tab2_label_3 = QLabel(self.tab_2)
+        self.tab2_label_3.setGeometry(QRect(310 * self.rate, 420 * self.rate, 71 * self.rate, 20 * self.rate))
+        self.tab2_label_3.setText("完全不透明")
 
-        # 工具栏4
-        self.tab_4 = QWidget()
-        self.tabWidget.addTab(self.tab_4, "")
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), "关于")
+        # 工具栏3
+        self.tab_3 = QWidget()
+        self.tabWidget.addTab(self.tab_3, "")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), "关于")
+
+        self.tab3_label = QLabel(self.tab_3)
+        self.tab3_label.setGeometry(QRect(30 * self.rate, 20 * self.rate, 100 * self.rate, 40 * self.rate))
+        self.tab3_label.setText("说明：")
+
+        self.tab3_label2 = QLabel(self.tab_3)
+        self.tab3_label2.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.tab3_label2.setWordWrap(True)
+        self.tab3_label2.setGeometry(QRect(50 * self.rate, 50 * self.rate, 400 * self.rate, 60 * self.rate))
+        self.tab3_label2.setText(
+            "如果在使用过程中有什么问题或者建议，欢迎微信交流(itlane)\n"
+            "或者github(https://github.com/zhangming8/Dango-ocr)上留言")
+
+        self.tab3_label3 = QLabel(self.tab_3)
+        self.tab3_label3.setWordWrap(True)
+        self.tab3_label3.setGeometry(QRect(30 * self.rate, 300 * self.rate, 400 * self.rate, 60 * self.rate))
+        self.tab3_label3.setText(
+            "参考\n        https://github.com/zhangming8/ocr_algo_server\n        "
+            "https://github.com/PaddlePaddle/PaddleOCR\n        "
+            "https://github.com/PantsuDango/Dango-Translator")
 
         # 设置保存按钮
         self.SaveButton = QPushButton(self)
