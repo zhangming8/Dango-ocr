@@ -14,8 +14,7 @@ DangoOCR：一个开源的文字识别工具,通过设置识别范围自动截�
    
 ####OCR算法服务
 + 如果您对OCR算法不感兴趣, 可以直接使用上面已经打包好的软件。如果您想进一步了解文字识别算法或者自己要搭建算法的服务，可以参考[OCR算法服务](https://github.com/zhangming8/ocr_algo_server)
-+ repo链接 https://github.com/zhangming8/ocr_algo_server
-+ 相关blog 
++ 相关blog [使用飞桨一步步实现多语言OCR文字识别软件](https://blog.csdn.net/u010397980/article/details/111940566)
 
 ### TODO计划
 + 优化高分辨率屏幕文字较小
