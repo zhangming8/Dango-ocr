@@ -12,7 +12,9 @@ except:
     screen_scale_rate_ = 1
 
     from src.api import write_error
-    write_error("[INFO] 没有win32, 无法自动获取屏幕缩放比例,设置为: {}".format(screen_scale_rate_))
+    from configs import Config
+
+    write_error("[INFO] 系统 {} 没有win32, 无法自动获取屏幕缩放比例,设置为: {}".format(Config().platform, screen_scale_rate_))
 
 
 def get_real_resolution():

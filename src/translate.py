@@ -12,7 +12,7 @@ from qtawesome import icon as qticon
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from src.api import orc, write_error
+from src.api import ocr, write_error
 from configs import folder_path, Config
 
 config = Config()
@@ -112,7 +112,7 @@ def translate(window, data, use_translate_signal):
         print("图片相似性: {}, 设置的阈值: {}".format(score, config.similarity_score))
 
     if score <= config.similarity_score:
-        sign, original, result_with_location = orc(data, window.image)
+        sign, original, result_with_location, translate_result = ocr(data, window.image)
 
         if config.debug:
             print("original:", original)
@@ -141,16 +141,18 @@ def translate(window, data, use_translate_signal):
             content = "\n\n[原文]\n%s" % original
             with open(folder_path + "/config/识别结果.txt", "a+", encoding="utf-8") as file:
                 file.write(content)
+                if translate_result != '':
+                    file.write("\n[翻译]\n{}".format(translate_result))
 
-            use_translate_signal.emit(signal_list, original, data, result_with_location)
+            use_translate_signal.emit(signal_list, original, data, result_with_location, translate_result)
 
         elif not sign:
             signal_list.append("error")
-            use_translate_signal.emit(signal_list, original, data, result_with_location)
+            use_translate_signal.emit(signal_list, original, data, result_with_location, translate_result)
 
 
 class TranslateThread(QThread):
-    use_translate_signal = pyqtSignal(list, str, dict, list)
+    use_translate_signal = pyqtSignal(list, str, dict, list, str)
 
     def __init__(self, window, mode):
 

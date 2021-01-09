@@ -9,7 +9,7 @@ from cv2 import imread, cvtColor, COLOR_BGR2RGB, imwrite
 import sys
 
 from PyQt5.QtCore import Qt, pyqtSignal, QPointF, QRect
-from PyQt5.QtWidgets import QTextEdit, QPushButton, QFileDialog, QApplication, QWidget
+from PyQt5.QtWidgets import QTextEdit, QPushButton, QFileDialog, QApplication, QWidget, QLabel
 from PyQt5.QtGui import QPixmap, QImage, QPalette, QBrush, QPainter, QPen, QColor, QPolygonF
 
 sys.path.append(".")
@@ -18,9 +18,9 @@ from src.api import write_error
 
 
 class VisResult(QWidget):
-    result_signal = pyqtSignal(str, dict, str)
+    result_signal = pyqtSignal(str, dict, str, str)
 
-    def __init__(self, np_img, result, configs, save_path):
+    def __init__(self, np_img, result, configs, translate_result, save_path):
         super(VisResult, self).__init__()
         self.setWindowState(Qt.WindowActive)
         # 窗口置顶
@@ -74,6 +74,7 @@ class VisResult(QWidget):
         self.CancelButton.clicked.connect(self.close)
 
         self.configs = configs
+        self.translate_result = translate_result
         self.default_save_path = save_path
 
     # 绘制事件
@@ -128,10 +129,11 @@ class VisResult(QWidget):
             self.vis_text_result.append(vis_text)
 
     def send_text(self):
-        sentence = ""
+        sentence = []
         for vis_text in self.vis_text_result:
-            sentence += (" " + vis_text.toPlainText())
-        self.result_signal.emit(sentence, self.configs, 'original')
+            sentence.append(vis_text.toPlainText())
+        sentence = " ".join(sentence)
+        self.result_signal.emit(sentence, self.configs, 'original', self.translate_result)
         self.close()
 
     def save_text(self):
@@ -187,7 +189,7 @@ if __name__ == '__main__':
                'text_region': [[3, 298], [133, 298], [133, 317], [3, 317]]}]
 
     app = QApplication(sys.argv)
-    win = VisResult(np_img=img, result=result, configs={}, save_path=[folder_path])
+    win = VisResult(np_img=img, result=result, configs={}, translate_result='', save_path=[folder_path])
     win.show()
 
     app.exec_()

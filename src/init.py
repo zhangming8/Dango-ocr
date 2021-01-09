@@ -40,7 +40,7 @@ class UseTranslateThread(QObject):
 
         if self.translate_type == "caiyunPrivate":
             result = self.fun(self.original, self.data)
-        elif self.translate_type == "original":
+        elif self.translate_type == "original" or self.translate_type == "translated":
             result = self.original
         else:
             result = self.fun(self.original)
@@ -563,7 +563,7 @@ class MainInterface(QMainWindow):
         thread.start()
 
     # 并发执行所有翻译源
-    def use_translate(self, signal_list, original, data, result_with_location):
+    def use_translate(self, signal_list, original, data, result_with_location, translate_result):
 
         # 翻译界面清屏
         self.translateText.clear()
@@ -575,10 +575,13 @@ class MainInterface(QMainWindow):
         if "original" in signal_list or "error" in signal_list:
             if data["vis_result"] == "True":
                 self.vis_res = VisResult(np_img=self.image, result=result_with_location, configs=data,
-                                         save_path=self.save_result_path)
+                                         translate_result=translate_result, save_path=self.save_result_path)
                 self.vis_res.result_signal.connect(self.display_modify_text)
                 self.vis_res.show()
             self.creat_thread(None, original, data, "original")
+
+            if data['showOriginal'] == "True":
+                self.creat_thread(None, translate_result, data, "translated")
 
     # 将翻译结果打印
     def display_text(self, result, data, translate_type):
@@ -599,16 +602,26 @@ class MainInterface(QMainWindow):
             write_error(format_exc())
 
     # 将翻译结果打印
-    def display_modify_text(self, result, data, translate_type):
+    def display_modify_text(self, result, data, translate_type, translate_result):
         self.translateText.clear()
-        self.original = result
+
         if data["showColorType"] == "False":
             self.format.setTextOutline(
                 QPen(QColor(data["fontColor"][translate_type]), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
             self.translateText.mergeCurrentCharFormat(self.format)
             self.translateText.append(result)
+
+            if data["showOriginal"] == "True":
+                self.format.setTextOutline(
+                    QPen(QColor(data["fontColor"]['translated']), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+                self.translateText.mergeCurrentCharFormat(self.format)
+                self.translateText.append(translate_result)
         else:
             self.translateText.append("<font color=%s>%s</font>" % (data["fontColor"][translate_type], result))
+            if data["showOriginal"] == "True":
+                self.translateText.append(
+                    "<font color=%s>%s</font>" % (data["fontColor"]['translated'], translate_result))
+        self.original = result
 
     # 语音朗读
     def play_voice(self):

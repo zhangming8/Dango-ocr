@@ -73,13 +73,13 @@ class SettinInterface(QWidget):
         self.tabWidget.addTab(self.tab_2, "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "设置")
 
-        # 翻译语种标签
+        # 原语言标签
         self.translateSource_label_6 = QLabel(self.tab_2)
         self.translateSource_label_6.setGeometry(
             QRect(30 * self.rate, 20 * self.rate, 151 * self.rate, 16 * self.rate))
         self.translateSource_label_6.setText("待识别的语言类型：")
 
-        # 翻译语种comboBox
+        # 原语言comboBox
         self.language_comboBox = QComboBox(self.tab_2)
         self.language_comboBox.setGeometry(
             QRect(190 * self.rate, 20 * self.rate, 150 * self.rate, 22 * self.rate))
@@ -187,6 +187,20 @@ class SettinInterface(QWidget):
             self.HotKey1_ComboBox.setItemText(index, HotKey)
         self.HotKey1_ComboBox.setCurrentIndex(self.showHotKey1Value1)
 
+        # 是否翻译
+        self.translate_checkBox = QCheckBox(self.tab_2)
+        self.translate_checkBox.setGeometry(
+            QRect(30 * self.rate, 315 * self.rate, 300 * self.rate, 16 * self.rate))
+        self.translate_checkBox.setChecked(self.need_translate)
+        self.translate_checkBox.setText("是否翻译为汉语")
+
+        # 是否翻译
+        self.show_org_checkBox = QCheckBox(self.tab_2)
+        self.show_org_checkBox.setGeometry(
+            QRect(30 * self.rate, 340 * self.rate, 300 * self.rate, 16 * self.rate))
+        self.show_org_checkBox.setChecked(self.showOriginal)
+        self.show_org_checkBox.setText("翻译后是否显示原文")
+
         # 翻译框透明度设定标签1
         self.tab4_label_1 = QLabel(self.tab_2)
         self.tab4_label_1.setGeometry(QRect(30 * self.rate, 380 * self.rate, 211 * self.rate, 16 * self.rate))
@@ -227,7 +241,7 @@ class SettinInterface(QWidget):
         self.tab3_label2.setGeometry(QRect(50 * self.rate, 100 * self.rate, 400 * self.rate, 80 * self.rate))
         self.tab3_label2.setText(
             "Dango-OCR是一款开源的OCR文字识别软件。\n如果在使用过程中有什么问题或者建议，欢迎微信交流(itlane)\n"
-            "或者在github(https://github.com/zhangming8/Dango-ocr)上留言")
+            "或者在github(https://github.com/zhangming8/Dango-ocr)\n上留言")
 
         self.tab3_label3 = QLabel(self.tab_3)
         self.tab3_label3.setWordWrap(True)
@@ -289,6 +303,12 @@ class SettinInterface(QWidget):
             self.vis_result = True
         else:
             self.vis_result = False
+
+        self.need_translate = self.data.get("need_translate", False)
+        if self.need_translate == "True":
+            self.need_translate = True
+        else:
+            self.need_translate = False
 
         # 所有可设置的快捷键
         self.HotKeys = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
@@ -356,7 +376,7 @@ class SettinInterface(QWidget):
         self.fontType = text
         self.data["fontType"] = self.fontType
 
-    def showOriginal_state(self):  # 颜色样式
+    def showColorType_state(self):  # 颜色样式
 
         if self.showColorType_checkBox.isChecked():
             self.showColorType = "True"
@@ -378,6 +398,20 @@ class SettinInterface(QWidget):
         else:
             self.vis_result = "False"
         self.data["vis_result"] = self.vis_result
+
+    def NeedTranslate_state(self):
+        if self.translate_checkBox.isChecked():
+            self.need_translate = "True"
+        else:
+            self.need_translate = "False"
+        self.data["need_translate"] = self.need_translate
+
+    def ShowOrigion_state(self):
+        if self.show_org_checkBox.isChecked():
+            self.showOriginal = "True"
+        else:
+            self.showOriginal = "False"
+        self.data["showOriginal"] = self.showOriginal
 
     def showHotKey1_state(self):  # 是否启用翻译键快捷键
 
@@ -432,10 +466,11 @@ class SettinInterface(QWidget):
         self.get_horizontal()
         self.save_fontSize()
 
-        self.showOriginal_state()
+        self.showColorType_state()
         self.showClipboard_state()
         self.VisResult_state()
-
+        self.NeedTranslate_state()
+        self.ShowOrigion_state()
         self.save_language()
 
         self.showHotKey1_state()

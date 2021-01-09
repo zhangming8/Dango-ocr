@@ -9,7 +9,8 @@ try:
     pyhook_flag = True
 except:
     from src.api import write_error
-    write_error("[INFO] 无法设置全局快捷键, 使用Qt自己的热键")
+    from configs import Config
+    write_error("[INFO] 系统 {} 无法设置全局快捷键, 使用Qt自己的热键".format(Config().platform))
     pyhook_flag = False
 
 

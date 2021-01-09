@@ -101,9 +101,11 @@ class Translater():
     def updata_Init(self):
 
         self.Settin.save_settin()  # 保存设置
+        self.data = self.Settin.data
         self.Settin.close()
         self.Init.image = None
-        self.open_settin()
+        self.Init.original = ''
+        # self.open_settin()
 
         # 刷新翻译界面的背景透明度
         horizontal = (self.data["horizontal"]) / 100

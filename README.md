@@ -1,19 +1,21 @@
 # Dango-OCR(Windows, Mac, Ubuntu)
 
-#### 介绍:
-DangoOCR：一个开源的文字识别工具,通过设置识别范围自动截取屏幕图片,或者手动加载本地图片实现文字的识别/提取。特点：
+#### 软件介绍:
+DangoOCR：一个开源的文字识别工具,通过选择识别范围自动截取屏幕图片,或者手动加载本地图片实现文字的识别/提取。特点：
 + 界面简单,即下即用
-+ 目前支持汉语, 日语, 英语, 韩语的文字识别, 会持续优化识别算法
++ 目前支持汉语, 日语, 英语, 韩语, 德语, 法语的文字识别, 会持续优化识别算法
 + 支持截图或者本地加载图片进行识别
 + 支持可视化识别结果,可以手动修正识别结果,并导出文件(.docx, .txt)及对应图片
++ 支持翻译为汉语
++ 如果开启“自动模式”, 选择一个区域后可以自动截屏并进行识别
 + 如果无法使用, 复制"config/error.txt"的内容进行反馈
-+ 代码main.py是程序入口, 也可以直接下载已经打包好的软件(存放目录路径中不能有空格)：
-   ##### [Windows版下载](https://images-1302624744.cos.ap-beijing.myqcloud.com/DangoOCR_windows_v1.rar)
++ 软件下载(存放目录路径中不能有空格)：
+   ##### [Windows版下载](http://42.192.22.125:1314/software/DangoOCR_windows_v1.rar)
    ##### [Mac版下载(只测了macOS 10.13.3)](http://42.192.22.125:1314/software/DangoOCR_mac_v1.rar)
    ##### [Ubuntu版下载(只测了ubuntu16.04)](http://42.192.22.125:1314/software/DangoOCR_ubuntu_v1.rar)
    
-####OCR算法服务
-+ 如果您对OCR算法不感兴趣, 可以直接使用上面已经打包好的软件。如果您想进一步了解文字识别算法或者自己要搭建算法的服务，可以参考[OCR算法服务](https://github.com/zhangming8/ocr_algo_server)
+#### OCR算法服务
++ 如果您对OCR算法不感兴趣, 可以直接使用上面已经做好的软件，解压后可以直接使用。如果您想进一步了解文字识别算法或者要自己搭建算法服务，可以参考[OCR算法服务](https://github.com/zhangming8/ocr_algo_server)进行部署并确保可以调通接口。在本工程中首先修改'config.py'中的ocr_request_url为搭好的服务地址，main.py是程序入口。
 + 相关blog [使用飞桨一步步实现多语言OCR文字识别软件](https://blog.csdn.net/u010397980/article/details/111940566)
 
 ### TODO计划
@@ -21,9 +23,9 @@ DangoOCR：一个开源的文字识别工具,通过设置识别范围自动截�
 + 导出docx文件时优化排版
 + 算法轻量化,实现离线文字识别
 
-### 使用说明(以Windows为例)：
+### 使用方法(以Windows系统为例)：
 
-+ 1 解压压缩包后，找到“DangoOCR.exe”文件双击即可运行(macOS下需要右键,打开方式选择终端)：
++ 1 解压压缩包后，找到“DangoOCR.exe”文件双击即可运行("Ubuntu"系统下也是双击。macOS系统下需要右键,打开方式选择终端)。在“设置”界面设置"待识别的语言类型"。
 
 + 2 软件界面如下(汉语识别)。
 <div align="center">

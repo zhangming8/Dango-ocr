@@ -69,9 +69,11 @@ class Voice(object):
 
 
 if __name__ == '__main__':
-    # ja en ko zh-CN
+    # ja en ko zh-CN fr de
     # Voice("다음은 서울에 있는 동네 이름에 얽힌 이야기이다.", 'ko')
     # Voice("It's snowing! It's time to make a snowman.James runs out. He makes a big pile of snow. He puts a big snowball on top.", 'en')
     # Voice('そうすると、可笑しいことや変なこと、滑稽なことや正しくないこと', 'ja')
-    flag, path = Voice("钢琴家傅聪确诊新冠系傅雷之子, 啊啊啊啦啦啦", 'zh-CN').save_voice()
+    # flag, path = Voice("钢琴家傅聪确诊新冠系傅雷之子, 啊啊啊啦啦啦").save_voice('zh-CN')
+    # flag, path = Voice("Je t'aime bien.").save_voice('fr')
+    flag, path = Voice("Ich mag dich").save_voice('de')
     print(flag, path)
