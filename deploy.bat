@@ -3,6 +3,7 @@ set save_name=DangoOCR_windows_v1
 set main=main
 
 scp configs2.py configs.py
+echo.>config\error.txt
 
 del/s/q build\*.*
 rd/s/q build

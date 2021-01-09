@@ -40,7 +40,7 @@ class UseTranslateThread(QObject):
 
         if self.translate_type == "caiyunPrivate":
             result = self.fun(self.original, self.data)
-        elif self.translate_type == "original":
+        elif self.translate_type == "original" or self.translate_type == "translated":
             result = self.original
         else:
             result = self.fun(self.original)
@@ -148,7 +148,7 @@ class MainInterface(QMainWindow):
         self.RangeButton.setIconSize(QSize(20, 20))
         self.RangeButton.setGeometry(QRect(193 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.RangeButton.setToolTip('<b>截屏识别图片 ScreenShot Range</b><br>框选要识别的区域')
-        self.RangeButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
+        self.RangeButton.setStyleSheet("color:white;background-color:rgba(200, 200, 200, {});".format(self.horizontal))
         self.RangeButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.RangeButton.hide()
 
@@ -157,7 +157,7 @@ class MainInterface(QMainWindow):
         self.StartButton.setIconSize(QSize(20, 20))
         self.StartButton.setGeometry(QRect(233 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.StartButton.setToolTip('<b>识别 Recognize</b><br>点击开始（手动）<br>开始/停止（自动）')
-        self.StartButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
+        self.StartButton.setStyleSheet("color:white;background-color:rgba(200, 200, 200, {});".format(self.horizontal))
         self.StartButton.clicked.connect(self.start_login)
         self.StartButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.StartButton.hide()
@@ -167,7 +167,7 @@ class MainInterface(QMainWindow):
         self.OpenButton.setIconSize(QSize(20, 20))
         self.OpenButton.setGeometry(QRect(273 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.OpenButton.setToolTip('<b>打开识别图片 Open image</b><br> 识别本地图片')
-        self.OpenButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
+        self.OpenButton.setStyleSheet("color:white;background-color:rgba(200, 200, 200, {});".format(self.horizontal))
         self.OpenButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.OpenButton.clicked.connect(self.open_image)
         self.OpenButton.hide()
@@ -177,7 +177,7 @@ class MainInterface(QMainWindow):
         self.CopyButton.setIconSize(QSize(20, 20))
         self.CopyButton.setGeometry(QRect(313 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.CopyButton.setToolTip('<b>复制 Copy</b><br>将当前识别到的文本<br>复制至剪贴板')
-        self.CopyButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
+        self.CopyButton.setStyleSheet("color:white;background-color:rgba(200, 200, 200, {});".format(self.horizontal))
         self.CopyButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.CopyButton.clicked.connect(lambda: copy(self.original))
         self.CopyButton.hide()
@@ -187,7 +187,7 @@ class MainInterface(QMainWindow):
         self.playVoiceButton.setIconSize(QSize(20, 20))
         self.playVoiceButton.setGeometry(QRect(353 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.playVoiceButton.setToolTip('<b>朗读原文 Play Voice</b><br>朗读识别到的原文')
-        self.playVoiceButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
+        self.playVoiceButton.setStyleSheet("color:white;background-color:rgba(200, 200, 200, {});".format(self.horizontal))
         self.playVoiceButton.clicked.connect(self.play_voice)
         self.playVoiceButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.playVoiceButton.hide()
@@ -209,10 +209,8 @@ class MainInterface(QMainWindow):
         self.languageText.setGeometry(QRect(463 * self.rate, 5 * self.rate, 45 * self.rate, 20 * self.rate))
         self.languageText.setToolTip('<b>待识别的原文类型 </b><br>Original Language Type')
         self.languageText.setStyleSheet("border-width:0;\
-                                                  border-style:outset;\
-                                                  border-top:0px solid #e8f3f9;\
                                                   color:white;\
-                                                  background-color:rgba(200, 200, 200, 0.4)")
+                                                  background-color:rgba(200, 200, 200, {})".format(self.horizontal))
         self.languageText.setCursor(QCursor(Qt.PointingHandCursor))
         self.languageText.setText(config.letter_chinese_dict[self.data["language"]])
         self.languageText.setFont(languageFont)
@@ -223,7 +221,7 @@ class MainInterface(QMainWindow):
         self.SettinButton.setIconSize(QSize(20, 20))
         self.SettinButton.setGeometry(QRect(518 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.SettinButton.setToolTip('<b>设置 Settin</b>')
-        self.SettinButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
+        self.SettinButton.setStyleSheet("color:white;background-color:rgba(200, 200, 200, {});".format(self.horizontal))
         self.SettinButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.SettinButton.hide()
 
@@ -232,7 +230,7 @@ class MainInterface(QMainWindow):
         self.LockButton.setIconSize(QSize(20, 20))
         self.LockButton.setGeometry(QRect(562 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.LockButton.setToolTip('<b>锁定翻译界面 Lock</b>')
-        self.LockButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
+        self.LockButton.setStyleSheet("color:white;background-color:rgba(200, 200, 200, {});".format(self.horizontal))
         self.LockButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.LockButton.clicked.connect(self.lock)
         self.LockButton.hide()
@@ -242,7 +240,7 @@ class MainInterface(QMainWindow):
         self.MinimizeButton.setIconSize(QSize(20, 20))
         self.MinimizeButton.setGeometry(QRect(602 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.MinimizeButton.setToolTip('<b>最小化 Minimize</b>')
-        self.MinimizeButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
+        self.MinimizeButton.setStyleSheet("color:white;background-color:rgba(200, 200, 200, {});".format(self.horizontal))
         self.MinimizeButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.MinimizeButton.clicked.connect(self.showMinimized)
         self.MinimizeButton.hide()
@@ -252,7 +250,7 @@ class MainInterface(QMainWindow):
         self.QuitButton.setIconSize(QSize(20, 20))
         self.QuitButton.setGeometry(QRect(642 * self.rate, 5 * self.rate, 20 * self.rate, 20 * self.rate))
         self.QuitButton.setToolTip('<b>退出程序 Quit</b>')
-        self.QuitButton.setStyleSheet("background-color:rgba(200, 200, 200, 0.4);")
+        self.QuitButton.setStyleSheet("color:white;background-color:rgba(200, 200, 200, {});".format(self.horizontal))
         self.QuitButton.setCursor(QCursor(Qt.PointingHandCursor))
         self.QuitButton.hide()
 
@@ -559,11 +557,11 @@ class MainInterface(QMainWindow):
         thread.start()
 
     # 并发执行所有翻译源
-    def use_translate(self, signal_list, original, data, result_with_location):
+    def use_translate(self, signal_list, original, data, result_with_location, translate_result):
 
         # 翻译界面清屏
         self.translateText.clear()
-        self.translateText.append(' ')
+        # self.translateText.append(' ')
         # 设定翻译时的字体类型和大小
         self.Font.setFamily(data["fontType"])
         self.Font.setPointSize(data["fontSize"])
@@ -572,10 +570,15 @@ class MainInterface(QMainWindow):
         if "original" in signal_list or "error" in signal_list:
             if data["vis_result"] == "True":
                 self.vis_res = VisResult(np_img=self.image, result=result_with_location, configs=data,
-                                         save_path=self.save_result_path)
+                                         translate_result=translate_result, save_path=self.save_result_path)
                 self.vis_res.result_signal.connect(self.display_modify_text)
                 self.vis_res.show()
-            self.creat_thread(None, original, data, "original")
+            if translate_result == '':
+                self.creat_thread(None, original, data, "original")
+            else:
+                if data['showOriginal'] == "True":
+                    self.creat_thread(None, original, data, "original")
+            self.creat_thread(None, translate_result, data, "translated")
 
     # 将翻译结果打印
     def display_text(self, result, data, translate_type):
@@ -596,16 +599,34 @@ class MainInterface(QMainWindow):
             write_error(format_exc())
 
     # 将翻译结果打印
-    def display_modify_text(self, result, data, translate_type):
+    def display_modify_text(self, result, data, translate_type, translate_result):
         self.translateText.clear()
-        self.original = result
+
         if data["showColorType"] == "False":
+            if translate_result == '':
+                self.format.setTextOutline(
+                    QPen(QColor(data["fontColor"][translate_type]), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+                self.translateText.mergeCurrentCharFormat(self.format)
+                self.translateText.append(result)
+            else:
+                if data["showOriginal"] == "True":
+                    self.format.setTextOutline(
+                        QPen(QColor(data["fontColor"][translate_type]), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+                    self.translateText.mergeCurrentCharFormat(self.format)
+                    self.translateText.append(result)
+
             self.format.setTextOutline(
-                QPen(QColor(data["fontColor"][translate_type]), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+                QPen(QColor(data["fontColor"]['translated']), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
             self.translateText.mergeCurrentCharFormat(self.format)
-            self.translateText.append(result)
+            self.translateText.append(translate_result)
         else:
-            self.translateText.append("<font color=%s>%s</font>" % (data["fontColor"][translate_type], result))
+            if translate_result == '':
+                self.translateText.append("<font color=%s>%s</font>" % (data["fontColor"][translate_type], result))
+            else:
+                if data["showOriginal"] == "True":
+                    self.translateText.append("<font color=%s>%s</font>" % (data["fontColor"][translate_type], result))
+            self.translateText.append("<font color=%s>%s</font>" % (data["fontColor"]['translated'], translate_result))
+        self.original = result
 
     # 语音朗读
     def play_voice(self):

@@ -4,6 +4,8 @@ save_name="DangoOCR_mac_v1"
 main="main"
 
 cp configs2.py configs.py
+cp /dev/null config/error.txt
+cp /dev/null config/识别结果.txt
 
 rm -rf build dist "${main}.spec" "${save_name}.rar"
 

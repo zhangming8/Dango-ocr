@@ -2,20 +2,22 @@
   "showColorType": "False",
   "fontColor": {
     "caiyunPrivate": "#ff0000",
-    "original": "#d93636"
+    "original": "#d93636",
+    "translated": "#1E90FF"
   },
-  "horizontal": 13,
+  "horizontal": 15,
   "showOriginal": "True",
   "vis_result": "True",
+  "need_translate": "False",
   "showHotKeyValue2": "F2",
   "fontSize": 15,
   "showHotKey2": "True",
   "fontType": "\u534e\u5eb7\u65b9\u5706\u4f53W7",
   "range": {
-    "X2": 630,
-    "Y2": 483,
-    "X1": 85,
-    "Y1": 453
+    "X2": 862,
+    "Y2": 243,
+    "X1": 362,
+    "Y1": 171
   },
   "showHotKeyValue1": "F3",
   "showClipboard": "False",

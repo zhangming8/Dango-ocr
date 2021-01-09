@@ -59,9 +59,11 @@ def image_to_base64(image_np):
     return image_code
 
 
-def orc(data, image):
+def ocr(data, image):
     img = image_to_base64(image)
-    data = {"image": img, "language_type": data["language"], "user_id": config.mac, "platform": config.platform}
+    data = {"image": img, "language_type": data["language"], "user_id": config.mac, "platform": config.platform,
+            'translate': 'no' if data['need_translate'] == "False" or data["language"] == 'CH' or data[
+                "language"] == 'CH_h' else 'yes'}
 
     try:
         response = post(config.ocr_request_url, data=data, timeout=config.time_out)
@@ -69,20 +71,26 @@ def orc(data, image):
         write_error("ocr识别服务:" + format_exc())
         sentence = ''
         error_stop()
-        return None, sentence, []
+        return None, sentence, [], ''
 
     if response:
-        result = response.json()['data']['result'][0]  # batch result, now we only use first one
-        # print(result)
-        sentence = ""
+        data = response.json()['data']
+        result = data['result'][0]  # batch result, now we only use first one
+        # print(data)
+        sentence = []
+
         for one_ann in result:
             text = one_ann["text"]
             conf = one_ann["confidence"]
             points = one_ann["text_region"]
-            sentence += (" " + text)
-
-        return True, sentence, result
+            sentence.append(text)
+        sentence = " ".join(sentence)
+        if data['translated']:
+            translate_result = data['translate_result']
+        else:
+            translate_result = ''
+        return True, sentence, result, translate_result
 
     else:
         sentence = 'OCR错误：response无响应'
-        return None, sentence, []
+        return None, sentence, [], ''

@@ -3,7 +3,7 @@
 from json import dump, load
 
 from PyQt5.QtWidgets import QLabel, QPushButton, QApplication, QWidget, QColorDialog, QTabWidget, QComboBox, \
-    QCheckBox, QSpinBox, QFontComboBox, QToolButton, QSlider
+    QCheckBox, QSpinBox, QFontComboBox, QToolButton, QSlider, QLineEdit
 from PyQt5.QtGui import QIcon, QPixmap, QFont
 from PyQt5.QtCore import QSize, QRect, Qt
 
@@ -73,16 +73,16 @@ class SettinInterface(QWidget):
         self.tabWidget.addTab(self.tab_2, "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), "设置")
 
-        # 翻译语种标签
+        # 原语言标签
         self.translateSource_label_6 = QLabel(self.tab_2)
         self.translateSource_label_6.setGeometry(
             QRect(30 * self.rate, 20 * self.rate, 151 * self.rate, 16 * self.rate))
-        self.translateSource_label_6.setText("待识别的语言：")
+        self.translateSource_label_6.setText("待识别的语言类型：")
 
-        # 翻译语种comboBox
+        # 原语言comboBox
         self.language_comboBox = QComboBox(self.tab_2)
         self.language_comboBox.setGeometry(
-            QRect(195 * self.rate, 20 * self.rate, 131 * self.rate, 22 * self.rate))
+            QRect(190 * self.rate, 20 * self.rate, 150 * self.rate, 22 * self.rate))
         for idx, language_name in enumerate(config.language_name):
             self.language_comboBox.addItem("")
             self.language_comboBox.setItemText(idx, language_name[1])
@@ -99,19 +99,19 @@ class SettinInterface(QWidget):
         # 自动复制到剪贴板checkBox
         self.Clipboard_checkBox = QCheckBox(self.tab_2)
         self.Clipboard_checkBox.setGeometry(
-            QRect(30 * self.rate, 73 * self.rate, 231 * self.rate, 16 * self.rate))
+            QRect(30 * self.rate, 80 * self.rate, 231 * self.rate, 16 * self.rate))
         self.Clipboard_checkBox.setChecked(self.showClipboard)
         self.Clipboard_checkBox.setText("识别结果自动复制到剪贴板")
 
         # 字体大小设定标签
         self.fontSize_label = QLabel(self.tab_2)
-        self.fontSize_label.setGeometry(QRect(30 * self.rate, 100 * self.rate, 145 * self.rate, 16 * self.rate))
-        self.fontSize_label.setText("文字大小：")
+        self.fontSize_label.setGeometry(QRect(30 * self.rate, 120 * self.rate, 145 * self.rate, 16 * self.rate))
+        self.fontSize_label.setText("显示文字大小：")
 
         # 字体大小设定
         self.fontSize_spinBox = QSpinBox(self.tab_2)
         self.fontSize_spinBox.setGeometry(
-            QRect(190 * self.rate, 100 * self.rate, 50 * self.rate, 25 * self.rate))
+            QRect(190 * self.rate, 120 * self.rate, 50 * self.rate, 25 * self.rate))
         self.fontSize_spinBox.setMinimum(10)
         self.fontSize_spinBox.setMaximum(30)
         self.fontSize_spinBox.setStyleSheet("background: rgba(255, 255, 255, 0)")
@@ -119,42 +119,60 @@ class SettinInterface(QWidget):
 
         # 字体样式设定标签
         self.translate_label = QLabel(self.tab_2)
-        self.translate_label.setGeometry(QRect(30 * self.rate, 130 * self.rate, 145 * self.rate, 20 * self.rate))
-        self.translate_label.setText("字体样式：")
+        self.translate_label.setGeometry(QRect(30 * self.rate, 145 * self.rate, 145 * self.rate, 20 * self.rate))
+        self.translate_label.setText("显示字体类型：")
 
         # 字体样式设定
         self.fontComboBox = QFontComboBox(self.tab_2)
-        self.fontComboBox.setGeometry(QRect(190 * self.rate, 130 * self.rate, 151 * self.rate, 25 * self.rate))
+        self.fontComboBox.setGeometry(QRect(190 * self.rate, 145 * self.rate, 151 * self.rate, 25 * self.rate))
         self.fontComboBox.setStyleSheet("background: rgba(255, 255, 255, 0.4)")
         self.fontComboBox.activated[str].connect(self.get_fontType)
         self.ComboBoxFont = QFont(self.fontType)
         self.fontComboBox.setCurrentFont(self.ComboBoxFont)
 
-        # 显示颜色样式checkBox
-        self.showColorType_checkBox = QCheckBox(self.tab_2)
-        self.showColorType_checkBox.setGeometry(
-            QRect(30 * self.rate, 160 * self.rate, 340 * self.rate, 20 * self.rate))
-        self.showColorType_checkBox.setChecked(self.showColorType)
-        self.showColorType_checkBox.setText("使用实心字体样式（不勾选则显示描边字体样式）")
-
         # 字体颜色设定标签
         self.colour_label = QLabel(self.tab_2)
-        self.colour_label.setGeometry(QRect(30 * self.rate, 220 * self.rate, 340 * self.rate, 25 * self.rate))
-        self.colour_label.setText("设置文字颜色：")
+        self.colour_label.setGeometry(QRect(30 * self.rate, 172 * self.rate, 340 * self.rate, 25 * self.rate))
+        self.colour_label.setText("显示文字颜色：")
 
         # 字体颜色按钮
         self.originalColour_toolButton = QToolButton(self.tab_2)
         self.originalColour_toolButton.setGeometry(
-            QRect(110 * self.rate, 220 * self.rate, 71 * self.rate, 25 * self.rate))
+            QRect(190 * self.rate, 175 * self.rate, 71 * self.rate, 25 * self.rate))
         self.originalColour_toolButton.setStyleSheet(
             "background: rgba(255, 255, 255, 0.4); color: {};".format(self.originalColor))
         self.originalColour_toolButton.clicked.connect(lambda: self.get_font_color())
         self.originalColour_toolButton.setText("选择颜色")
 
+        # 显示颜色样式checkBox
+        self.showColorType_checkBox = QCheckBox(self.tab_2)
+        self.showColorType_checkBox.setGeometry(
+            QRect(30 * self.rate, 200 * self.rate, 340 * self.rate, 20 * self.rate))
+        self.showColorType_checkBox.setChecked(self.showColorType)
+        self.showColorType_checkBox.setText("是否使用实心字体样式（不勾选则显示描边字体样式）")
+
+        # 截屏键快捷键checkBox
+        self.shortcutKey2_checkBox = QCheckBox(self.tab_2)
+        self.shortcutKey2_checkBox.setGeometry(
+            QRect(30 * self.rate, 250 * self.rate, 160 * self.rate, 16 * self.rate))
+        self.shortcutKey2_checkBox.setStyleSheet("background: transparent;")
+        self.shortcutKey2_checkBox.setChecked(self.showHotKey2)
+        self.shortcutKey2_checkBox.setText("是否使用截屏快捷键：")
+
+        # 截屏键的快捷键
+        self.HotKey2_ComboBox = QComboBox(self.tab_2)
+        self.HotKey2_ComboBox.setGeometry(
+            QRect(200 * self.rate, 250 * self.rate, 120 * self.rate, 21 * self.rate))
+        self.HotKey2_ComboBox.setStyleSheet("background: rgba(255, 255, 255, 0.4);")
+        for index, HotKey in enumerate(self.HotKeys):
+            self.HotKey2_ComboBox.addItem("")
+            self.HotKey2_ComboBox.setItemText(index, HotKey)
+        self.HotKey2_ComboBox.setCurrentIndex(self.showHotKey1Value2)
+
         # 翻译键快捷键checkBox
         self.shortcutKey1_checkBox = QCheckBox(self.tab_2)
         self.shortcutKey1_checkBox.setGeometry(
-            QRect(30 * self.rate, 275 * self.rate, 160 * self.rate, 16 * self.rate))
+            QRect(30 * self.rate, 280 * self.rate, 160 * self.rate, 16 * self.rate))
         self.shortcutKey1_checkBox.setStyleSheet("background: transparent;")
         self.shortcutKey1_checkBox.setChecked(self.showHotKey1)
         self.shortcutKey1_checkBox.setText("是否使用识别快捷键：")
@@ -162,35 +180,31 @@ class SettinInterface(QWidget):
         # 翻译键的快捷键
         self.HotKey1_ComboBox = QComboBox(self.tab_2)
         self.HotKey1_ComboBox.setGeometry(
-            QRect(200 * self.rate, 270 * self.rate, 120 * self.rate, 21 * self.rate))
+            QRect(200 * self.rate, 280 * self.rate, 120 * self.rate, 21 * self.rate))
         self.HotKey1_ComboBox.setStyleSheet("background: rgba(255, 255, 255, 0.4);")
         for index, HotKey in enumerate(self.HotKeys):
             self.HotKey1_ComboBox.addItem("")
             self.HotKey1_ComboBox.setItemText(index, HotKey)
         self.HotKey1_ComboBox.setCurrentIndex(self.showHotKey1Value1)
 
-        # 范围键快捷键checkBox
-        self.shortcutKey2_checkBox = QCheckBox(self.tab_2)
-        self.shortcutKey2_checkBox.setGeometry(
-            QRect(30 * self.rate, 315 * self.rate, 160 * self.rate, 16 * self.rate))
-        self.shortcutKey2_checkBox.setStyleSheet("background: transparent;")
-        self.shortcutKey2_checkBox.setChecked(self.showHotKey2)
-        self.shortcutKey2_checkBox.setText("是否使用截屏快捷键：")
+        # 是否翻译
+        self.translate_checkBox = QCheckBox(self.tab_2)
+        self.translate_checkBox.setGeometry(
+            QRect(30 * self.rate, 315 * self.rate, 300 * self.rate, 16 * self.rate))
+        self.translate_checkBox.setChecked(self.need_translate)
+        self.translate_checkBox.setText("是否翻译为汉语")
 
-        # 范围键的快捷键
-        self.HotKey2_ComboBox = QComboBox(self.tab_2)
-        self.HotKey2_ComboBox.setGeometry(
-            QRect(200 * self.rate, 310 * self.rate, 120 * self.rate, 21 * self.rate))
-        self.HotKey2_ComboBox.setStyleSheet("background: rgba(255, 255, 255, 0.4);")
-        for index, HotKey in enumerate(self.HotKeys):
-            self.HotKey2_ComboBox.addItem("")
-            self.HotKey2_ComboBox.setItemText(index, HotKey)
-        self.HotKey2_ComboBox.setCurrentIndex(self.showHotKey1Value2)
+        # 是否翻译
+        self.show_org_checkBox = QCheckBox(self.tab_2)
+        self.show_org_checkBox.setGeometry(
+            QRect(30 * self.rate, 340 * self.rate, 300 * self.rate, 16 * self.rate))
+        self.show_org_checkBox.setChecked(self.showOriginal)
+        self.show_org_checkBox.setText("翻译后是否显示原文")
 
         # 翻译框透明度设定标签1
         self.tab4_label_1 = QLabel(self.tab_2)
         self.tab4_label_1.setGeometry(QRect(30 * self.rate, 380 * self.rate, 211 * self.rate, 16 * self.rate))
-        self.tab4_label_1.setText("调节界面的背景透明度")
+        self.tab4_label_1.setText("调节显示界面的透明度")
 
         # 翻译框透明度设定
         self.horizontalSlider = QSlider(self.tab_2)
@@ -203,19 +217,39 @@ class SettinInterface(QWidget):
         self.horizontalSlider.valueChanged.connect(self.get_horizontal)
 
         # 翻译框透明度设定标签2
-        self.tab4_label_2 = QLabel(self.tab_2)
-        self.tab4_label_2.setGeometry(QRect(30 * self.rate, 420 * self.rate, 61 * self.rate, 20 * self.rate))
-        self.tab4_label_2.setText("完全透明")
+        self.tab2_label_2 = QLabel(self.tab_2)
+        self.tab2_label_2.setGeometry(QRect(30 * self.rate, 420 * self.rate, 61 * self.rate, 20 * self.rate))
+        self.tab2_label_2.setText("完全透明")
 
         # 翻译框透明度设定标签3
-        self.tab4_label_3 = QLabel(self.tab_2)
-        self.tab4_label_3.setGeometry(QRect(310 * self.rate, 420 * self.rate, 71 * self.rate, 20 * self.rate))
-        self.tab4_label_3.setText("完全不透明")
+        self.tab2_label_3 = QLabel(self.tab_2)
+        self.tab2_label_3.setGeometry(QRect(310 * self.rate, 420 * self.rate, 71 * self.rate, 20 * self.rate))
+        self.tab2_label_3.setText("完全不透明")
 
-        # 工具栏4
-        self.tab_4 = QWidget()
-        self.tabWidget.addTab(self.tab_4, "")
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), "关于")
+        # 工具栏3
+        self.tab_3 = QWidget()
+        self.tabWidget.addTab(self.tab_3, "")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), "关于")
+
+        self.tab3_label = QLabel(self.tab_3)
+        self.tab3_label.setGeometry(QRect(30 * self.rate, 75 * self.rate, 100 * self.rate, 40 * self.rate))
+        self.tab3_label.setText("说明：")
+
+        self.tab3_label2 = QLabel(self.tab_3)
+        self.tab3_label2.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.tab3_label2.setWordWrap(True)
+        self.tab3_label2.setGeometry(QRect(50 * self.rate, 100 * self.rate, 400 * self.rate, 80 * self.rate))
+        self.tab3_label2.setText(
+            "Dango-OCR是一款开源的OCR文字识别软件。\n如果在使用过程中有什么问题或者建议，欢迎微信交流(itlane)\n"
+            "或者在github(https://github.com/zhangming8/Dango-ocr)\n上留言")
+
+        self.tab3_label3 = QLabel(self.tab_3)
+        self.tab3_label3.setWordWrap(True)
+        self.tab3_label3.setGeometry(QRect(30 * self.rate, 350 * self.rate, 400 * self.rate, 80 * self.rate))
+        self.tab3_label3.setText(
+            "参考:\n        https://github.com/zhangming8/ocr_algo_server\n        "
+            "https://github.com/PaddlePaddle/PaddleOCR\n        "
+            "https://github.com/PantsuDango/Dango-Translator")
 
         # 设置保存按钮
         self.SaveButton = QPushButton(self)
@@ -269,6 +303,12 @@ class SettinInterface(QWidget):
             self.vis_result = True
         else:
             self.vis_result = False
+
+        self.need_translate = self.data.get("need_translate", False)
+        if self.need_translate == "True":
+            self.need_translate = True
+        else:
+            self.need_translate = False
 
         # 所有可设置的快捷键
         self.HotKeys = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
@@ -336,7 +376,7 @@ class SettinInterface(QWidget):
         self.fontType = text
         self.data["fontType"] = self.fontType
 
-    def showOriginal_state(self):  # 颜色样式
+    def showColorType_state(self):  # 颜色样式
 
         if self.showColorType_checkBox.isChecked():
             self.showColorType = "True"
@@ -358,6 +398,20 @@ class SettinInterface(QWidget):
         else:
             self.vis_result = "False"
         self.data["vis_result"] = self.vis_result
+
+    def NeedTranslate_state(self):
+        if self.translate_checkBox.isChecked():
+            self.need_translate = "True"
+        else:
+            self.need_translate = "False"
+        self.data["need_translate"] = self.need_translate
+
+    def ShowOrigion_state(self):
+        if self.show_org_checkBox.isChecked():
+            self.showOriginal = "True"
+        else:
+            self.showOriginal = "False"
+        self.data["showOriginal"] = self.showOriginal
 
     def showHotKey1_state(self):  # 是否启用翻译键快捷键
 
@@ -412,10 +466,11 @@ class SettinInterface(QWidget):
         self.get_horizontal()
         self.save_fontSize()
 
-        self.showOriginal_state()
+        self.showColorType_state()
         self.showClipboard_state()
         self.VisResult_state()
-
+        self.NeedTranslate_state()
+        self.ShowOrigion_state()
         self.save_language()
 
         self.showHotKey1_state()
