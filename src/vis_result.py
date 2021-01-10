@@ -10,7 +10,7 @@ import sys
 
 from PyQt5.QtCore import Qt, pyqtSignal, QPointF, QRect
 from PyQt5.QtWidgets import QTextEdit, QPushButton, QFileDialog, QApplication, QWidget, QLabel
-from PyQt5.QtGui import QPixmap, QImage, QPalette, QBrush, QPainter, QPen, QColor, QPolygonF
+from PyQt5.QtGui import QPixmap, QImage, QPalette, QBrush, QPainter, QPen, QColor, QPolygonF, QIcon
 
 sys.path.append(".")
 from configs import folder_path
@@ -26,6 +26,10 @@ class VisResult(QWidget):
         # 窗口置顶
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setWindowTitle("修改识别结果")
+        # 窗口图标
+        self.icon = QIcon()
+        self.icon.addPixmap(QPixmap(folder_path + "/config/logo.ico"), QIcon.Normal, QIcon.On)
+        self.setWindowIcon(self.icon)
 
         self.np_img = np_img
         self.results = result

@@ -578,10 +578,12 @@ class MainInterface(QMainWindow):
                                          translate_result=translate_result, save_path=self.save_result_path)
                 self.vis_res.result_signal.connect(self.display_modify_text)
                 self.vis_res.show()
-            self.creat_thread(None, original, data, "original")
-
-            if data['showOriginal'] == "True":
-                self.creat_thread(None, translate_result, data, "translated")
+            if translate_result == '':
+                self.creat_thread(None, original, data, "original")
+            else:
+                if data['showOriginal'] == "True":
+                    self.creat_thread(None, original, data, "original")
+            self.creat_thread(None, translate_result, data, "translated")
 
     # 将翻译结果打印
     def display_text(self, result, data, translate_type):
@@ -601,26 +603,34 @@ class MainInterface(QMainWindow):
         except Exception:
             write_error(format_exc())
 
-    # 将翻译结果打印
+    # 将修改后的结果打印
     def display_modify_text(self, result, data, translate_type, translate_result):
         self.translateText.clear()
 
         if data["showColorType"] == "False":
-            self.format.setTextOutline(
-                QPen(QColor(data["fontColor"][translate_type]), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-            self.translateText.mergeCurrentCharFormat(self.format)
-            self.translateText.append(result)
-
-            if data["showOriginal"] == "True":
+            if translate_result == '':
                 self.format.setTextOutline(
-                    QPen(QColor(data["fontColor"]['translated']), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+                    QPen(QColor(data["fontColor"][translate_type]), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
                 self.translateText.mergeCurrentCharFormat(self.format)
-                self.translateText.append(translate_result)
+                self.translateText.append(result)
+            else:
+                if data["showOriginal"] == "True":
+                    self.format.setTextOutline(
+                        QPen(QColor(data["fontColor"][translate_type]), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+                    self.translateText.mergeCurrentCharFormat(self.format)
+                    self.translateText.append(result)
+
+            self.format.setTextOutline(
+                QPen(QColor(data["fontColor"]['translated']), 0.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+            self.translateText.mergeCurrentCharFormat(self.format)
+            self.translateText.append(translate_result)
         else:
-            self.translateText.append("<font color=%s>%s</font>" % (data["fontColor"][translate_type], result))
-            if data["showOriginal"] == "True":
-                self.translateText.append(
-                    "<font color=%s>%s</font>" % (data["fontColor"]['translated'], translate_result))
+            if translate_result == '':
+                self.translateText.append("<font color=%s>%s</font>" % (data["fontColor"][translate_type], result))
+            else:
+                if data["showOriginal"] == "True":
+                    self.translateText.append("<font color=%s>%s</font>" % (data["fontColor"][translate_type], result))
+            self.translateText.append("<font color=%s>%s</font>" % (data["fontColor"]['translated'], translate_result))
         self.original = result
 
     # 语音朗读
