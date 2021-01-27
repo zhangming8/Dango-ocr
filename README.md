@@ -10,9 +10,9 @@ DangoOCR：一个开源的文字识别工具,通过选择识别范围自动截�
 + 如果开启“自动模式”, 选择一个区域后可以自动截屏并进行识别
 + 如果无法使用, 复制"config/error.txt"的内容进行反馈
 + 软件下载(存放目录路径中不能有空格)：
-   ##### Windows版[下载1](http://180.76.228.199:1314/software/DangoOCR_windows_v1.rar)或[下载2](http://42.192.22.125:1314/software/DangoOCR_windows_v1.rar)
-   ##### Mac版(只测了macOS 10.13.3)[下载1](http://180.76.228.199:1314/software/DangoOCR_mac_v1.rar)或[下载2](http://42.192.22.125:1314/software/DangoOCR_mac_v1.rar)
-   ##### Ubuntu版(只测了ubuntu16.04)[下载1](http://180.76.228.199:1314/software/DangoOCR_ubuntu_v1.rar)或[下载2](http://42.192.22.125:1314/software/DangoOCR_ubuntu_v1.rar)
+   ##### Windows版[下载](https://images-1302624744.cos.ap-beijing.myqcloud.com/software/DangoOCR_windows_v1.rar)
+   ##### Mac版(只测了macOS 10.13.3)[下载](https://images-1302624744.cos.ap-beijing.myqcloud.com/software/DangoOCR_mac_v1.rar)
+   ##### Ubuntu版(只测了ubuntu16.04)[下载](https://images-1302624744.cos.ap-beijing.myqcloud.com/software/DangoOCR_ubuntu_v1.rar)
    
 #### OCR算法服务
 + 如果您对OCR算法不感兴趣, 可以直接使用上面已经做好的软件，解压后可以直接使用。如果您想进一步了解文字识别算法或者要自己搭建算法服务，可以参考[OCR算法服务](https://github.com/zhangming8/ocr_algo_server)进行部署并确保可以调通接口。在本工程中首先修改'config.py'中的ocr_request_url为搭好的服务地址，main.py是程序入口。
