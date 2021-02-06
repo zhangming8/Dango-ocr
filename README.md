@@ -16,7 +16,8 @@ DangoOCR：一个开源的文字识别工具,通过选择识别范围自动截�
    
 #### OCR算法服务
 + 如果您对OCR算法不感兴趣, 可以直接使用上面已经做好的软件，解压后可以直接使用。如果您想进一步了解文字识别算法或者要自己搭建算法服务，可以参考[OCR算法服务](https://github.com/zhangming8/ocr_algo_server)进行部署并确保可以调通接口。在本工程中首先修改'config.py'中的ocr_request_url为搭好的服务地址，main.py是程序入口。
-+ 相关blog [使用飞桨一步步实现多语言OCR文字识别软件](https://blog.csdn.net/u010397980/article/details/111940566)
++ 相关说明1 [手把手教你用PaddleOCR与PyQT实现多语言文字识别的程序](https://mp.weixin.qq.com/s/MSSsTLrxPvxpl6ij7jIR-w)
++ 相关说明2 [使用飞桨一步步实现多语言OCR文字识别软件](https://blog.csdn.net/u010397980/article/details/111940566)
 
 ### TODO计划
 + 优化高分辨率屏幕文字较小
